@@ -20,7 +20,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\grid.h">
+    <ClInclude Include="src\cell.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\cell.h">
