@@ -43,29 +43,16 @@ int main()
             }
         }
 
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) //User can use right click to change the starting location
-        {
-            if (sf::Mouse::getPosition(window).x >= 0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size) //Clamp...
-            {
-                auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
-                auto& curr_cell = v_cells[dim * col_no + row_no]; //Cell (x,y) can be written as y*row_size + x. Don't want a copy
-
-                for (auto& cell : v_cells) //Reset the previous starting cell
-                {
-                    if (cell.isStart()) cell.reset(); 
-                }
-
-                curr_cell.setStart();
-            }
-        }
-
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) //Press R to reset the grid
         {
             for (auto& cell : v_cells)
             {
                 cell.reset();
             }
+
         }
+
+
 
 
 
@@ -81,24 +68,42 @@ int main()
                     break;
                 }
 
-                case sf::Event::TextEntered:
+                case sf::Event::KeyPressed:
                 {
-                    if (evnt.text.unicode < 128 && evnt.text.unicode != 8) //exclude backspace
-                        std::cout << "ASCII character typed: " << static_cast<char>(evnt.text.unicode) << '\n';
-                    break;
-                }
 
-                case sf::Event::MouseButtonPressed:
-                {
-                    //if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) //Left click to place walls
-                    //{
-                    //    auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
-                    //    auto& curr_cell = v_cells[dim * col_no + row_no]; //Cell (x,y) can be written as y*row_size + x. Don't want a copy
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) //User can press 1 to change the start location to mouse position
+                    {
+                        if (sf::Mouse::getPosition(window).x >= 0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size) //Clamp...
+                        {
+                            auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
+                            auto& curr_cell = v_cells[dim * col_no + row_no]; //Cell (x,y) can be written as y*row_size + x. Don't want a copy
 
-                    //    curr_cell.setWall();
-                    //}
+                            for (auto& cell : v_cells) //Reset the previous starting cell
+                            {
+                                if (cell.isStart()) cell.reset();
+                            }
 
-                    //Right click to set start location
+                            curr_cell.setStart();
+                        }
+                    }
+
+                    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) //User can press 2 to change the end location to mouse position
+                    {
+                            if (sf::Mouse::getPosition(window).x >= 0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size) //Clamp...
+                            {
+                                auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
+                                auto& curr_cell = v_cells[dim * col_no + row_no]; //Cell (x,y) can be written as y*row_size + x. Don't want a copy
+
+                                for (auto& cell : v_cells) //Reset the previous starting cell
+                                {
+                                    if (cell.isEnd()) cell.reset();
+                                }
+
+                                curr_cell.setEnd();
+                            }
+                    }
+
+
 
                     break;
                 }
