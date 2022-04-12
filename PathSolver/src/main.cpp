@@ -110,7 +110,8 @@ int main()
 
                     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) //User can press Space to run the BFS
                     {
-                        bfs(v_cells);
+                        std::unordered_map<int,int> parents = bfs(v_cells);
+                        draw_path(parents, v_cells);
 
                     }
 
