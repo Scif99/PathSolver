@@ -9,15 +9,19 @@ public:
 	void setWall();
 	void setStart();
 	void setEnd();
+	void setPath();
 	void reset();
 
 	bool isStart() const { return is_start_; }
 	bool isEnd() const { return is_end_; }
+	bool isPath() const { return is_path_; }
+
 private:
 	sf::RectangleShape rect_;
 	bool is_wall_;
 	bool is_start_;
 	bool is_end_;
+	bool is_path_;
 
 };
 
@@ -25,7 +29,7 @@ private:
 
 
 Cell::Cell(int x, int y, int w_size)
-	:rect_{ sf::RectangleShape() }, is_wall_{ false }, is_start_{ false }, is_end_{false}
+	:rect_{ sf::RectangleShape() }, is_wall_{ false }, is_start_{ false }, is_end_{false}, is_path_{false}
 {
 	rect_.setPosition(x, y);
 	rect_.setSize(sf::Vector2f(w_size / 3, w_size / 3)); //Grid is 3x3
@@ -58,11 +62,18 @@ void Cell::setEnd()
 	is_end_ = true;
 }
 
+void Cell::setPath()
+{
+	rect_.setFillColor(sf::Color::Green);
+	is_path_= true;
+}
+
 void Cell::reset()
 {
 	rect_.setFillColor(sf::Color::White);
 	is_wall_ = false;
 	is_start_ = false;
 	is_end_ = false;
+	is_path_ = false;
 }
 

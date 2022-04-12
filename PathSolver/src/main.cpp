@@ -3,6 +3,7 @@
 
 #include "cell.h"
 #include "utility.h"
+#include "bfs.h"
 
 
 
@@ -17,11 +18,14 @@ int main()
 
 
     //Fill the grid
-    for (int i = 0; i < dim; ++i)
+    for (int i = 0; i < dim; ++i) //Row 
     {
-        for (int j = 0;j < dim;++j)
+        for (int j = 0;j < dim;++j) //Column
         {
-            v_cells.push_back(Cell{ j * w_size / dim, i * w_size / dim, w_size });//Note we want vector to go along columns --->, hence the ordering of i and j
+            int units = w_size / dim;
+            //v_cells[i*dim +j] = (Cell{ j * units, i *units, w_size });//Note we want vector to go along columns --->, hence the ordering of i and j
+            v_cells.push_back(Cell{ j *units, i * units, w_size });//Note we want vector to go along columns --->, hence the ordering of i and j
+
         }
 
     }
@@ -37,6 +41,7 @@ int main()
             if (sf::Mouse::getPosition(window).x >=0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size)
             {
                 auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
+                std::cerr << "row: " << row_no << "col: " << col_no << "index: "<<col_no*dim + row_no <<'\n';
                 auto& curr_cell = v_cells[dim * col_no + row_no]; //Cell (x,y) can be written as y*row_size + x. Don't want a copy
 
                 if(!curr_cell.isStart()) curr_cell.setWall(); //User cannot place walls on starting location
@@ -103,7 +108,11 @@ int main()
                             }
                     }
 
+                    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) //User can press Space to run the BFS
+                    {
+                        bfs(v_cells);
 
+                    }
 
                     break;
                 }
