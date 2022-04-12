@@ -17,7 +17,7 @@ std::pair<int, int> getCoords(const sf::Window& win, int win_size, int grid_dim)
 	int unit = win_size / grid_dim; //grid is dim cells wide
 	clamp(x, 0, win_size);
 	clamp(y, 0, win_size);
-	int row_no = x / unit;
-	int col_no = y / unit;
+	int col_no = x / unit;
+	int row_no = y / unit;
 	return { row_no,col_no };
 }
