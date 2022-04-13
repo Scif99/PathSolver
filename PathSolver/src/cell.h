@@ -9,19 +9,22 @@ public:
 	void setWall();
 	void setStart();
 	void setEnd();
-	void setPath();
+	void setExplored();
+	void setFrontier();
 	void reset();
 
 	bool isStart() const { return is_start_; }
 	bool isEnd() const { return is_end_; }
-	bool isPath() const { return is_path_; }
+	bool isExplored() const { return is_explored_; }
+	bool isFrontier() const { return is_frontier_; }
 
 private:
 	sf::RectangleShape rect_;
 	bool is_wall_;
 	bool is_start_;
 	bool is_end_;
-	bool is_path_;
+	bool is_explored_;
+	bool is_frontier_;
 
 };
 
@@ -29,7 +32,7 @@ private:
 
 
 Cell::Cell(int x, int y, int w_size)
-	:rect_{ sf::RectangleShape() }, is_wall_{ false }, is_start_{ false }, is_end_{false}, is_path_{false}
+	:rect_{ sf::RectangleShape() }, is_wall_{ false }, is_start_{ false }, is_end_{false}, is_explored_{false}, is_frontier_{false}
 {
 	rect_.setPosition(x, y);
 	rect_.setSize(sf::Vector2f(w_size / 3, w_size / 3)); //Grid is 3x3
@@ -62,10 +65,16 @@ void Cell::setEnd()
 	is_end_ = true;
 }
 
-void Cell::setPath()
+void Cell::setExplored()
 {
-	rect_.setFillColor(sf::Color::Green);
-	is_path_= true;
+	is_explored_ = true;
+	rect_.setFillColor(sf::Color::Cyan);
+	
+}
+void Cell::setFrontier()
+{
+	is_frontier_ = true;
+	rect_.setFillColor(sf::Color::Magenta);
 }
 
 void Cell::reset()
@@ -74,6 +83,6 @@ void Cell::reset()
 	is_wall_ = false;
 	is_start_ = false;
 	is_end_ = false;
-	is_path_ = false;
+	is_explored_ = false;
 }
 

@@ -39,7 +39,6 @@ int main()
             if (sf::Mouse::getPosition(window).x >=0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size)
             {
                 auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
-                std::cerr << "row: " << row_no << "col: " << col_no << "index: "<<col_no*dim + row_no <<'\n';
                 auto& curr_cell = v_cells[row_no*dim  + col_no]; //Cell (x,y) can be written as y*row_size + x. Don't want a copy
 
                 if(!curr_cell.isStart()) curr_cell.setWall(); //User cannot place walls on starting location
@@ -87,6 +86,7 @@ int main()
                             }
 
                             curr_cell.setStart();
+                            std::cout << "Placed start at " << row_no * dim + col_no << '\n';
                         }
                     }
 
@@ -101,7 +101,7 @@ int main()
                                 {
                                     if (cell.isEnd()) cell.reset();
                                 }
-
+                                std::cout << "Placed end at " << row_no * dim + col_no << '\n';
                                 curr_cell.setEnd();
                             }
                     }
@@ -109,7 +109,7 @@ int main()
                     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) //User can press Space to run the BFS
                     {
                         std::unordered_map<int,int> parents = bfs(v_cells);
-                        draw_path(parents, v_cells);
+                        //draw_path(parents, v_cells);
 
                     }
 

@@ -12,8 +12,8 @@ std::vector<int> get_neighbours(int index, int dim)
 {
 	std::vector<int> ans;
 	if (index % dim != 0) ans.push_back(index - 1); //Left
-	if (index + 1 % dim != 0) ans.push_back(index + 1);//Right
 	if (index - dim > 0) ans.push_back(index - dim); //Up
+	if (index + 1 % dim != 0) ans.push_back(index + 1);//Right
 	if (index + dim < dim * dim - 1) ans.push_back(index + dim); //Down
 	return ans;
 
@@ -43,34 +43,50 @@ int get_end_index(const std::vector<Cell>& grid)
 std::unordered_map<int,int> bfs(std::vector<Cell>& grid)
 {
 	std::unordered_map<int, int> parent; //parent[i] is the index from which i came from.
-	int start = get_start_index(grid);	
-	grid[start].setPath(); 
-
+	std::unordered_map<int, int> distance; //distance[i] is the distance of cell at index i from the start.
 	std::queue<int> frontier; //Queue containts the indices of the cells being explored
+	
+
+	int start = get_start_index(grid);	
+	
+
+	
 	frontier.push(start);
 	parent[start] = -1;
+	distance[start] = 0;
+	grid[start].isExplored();
 	//Assert: 
 
 	while (!frontier.empty())
 	{
 		
 		int curr = frontier.front();
+		grid[curr].setExplored();
 		frontier.pop();
+		
+		//std::cerr << "Exploring: " << curr << '\n';
 
 		if (grid[curr].isEnd())
 		{
+			//std::cout << "Target found in " << distance[curr] << " steps" << '\n';
 			return parent; //Done
 		}
 
-		std::vector<int> neighbours = get_neighbours(curr, 20); //DIM VARIABLE?
+		std::vector<int> neighbours = get_neighbours(curr, 20); //Dim should be a variable?
 		for (int i : neighbours)
 		{
-			if (!grid[i].isPath())
+			
+			if (!grid[i].isExplored())
 			{
-				grid[i].setPath();
+				//std::cerr << i << " is an unseen neighbour of " << curr << '\n';
 				frontier.push(i);
+				distance[i] = distance[curr] + 1;
+				grid[i].setFrontier();
 				parent[i] = curr;
+				
 			}
+
+			//else std::cout << i << " has been seen before... ignoring " << '\n';
 		}
 
 	}
@@ -81,6 +97,7 @@ std::unordered_map<int,int> bfs(std::vector<Cell>& grid)
 void draw_path(std::unordered_map<int, int>& parents, std::vector<Cell>& grid)
 {
 	int curr = get_end_index(grid);
+	int dist = 0;
 	while (parents[curr]>=0)
 	{
 		std::cout << curr << '\n';
