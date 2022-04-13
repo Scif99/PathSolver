@@ -40,7 +40,7 @@ int get_end_index(const std::vector<Cell>& grid)
 	}
 }
 
-std::unordered_map<int,int> bfs(std::vector<Cell>& grid)
+std::unordered_map<int,int> bfs(std::vector<Cell>& grid) //Returns a map containing the parents of each cell
 {
 	std::unordered_map<int, int> parent; //parent[i] is the index from which i came from.
 	std::unordered_map<int, int> distance; //distance[i] is the distance of cell at index i from the start.
@@ -66,7 +66,7 @@ std::unordered_map<int,int> bfs(std::vector<Cell>& grid)
 		
 		//std::cerr << "Exploring: " << curr << '\n';
 
-		if (grid[curr].isEnd())
+		if (grid[curr].isEnd()) //End early if we find the target
 		{
 			//std::cout << "Target found in " << distance[curr] << " steps" << '\n';
 			return parent; //Done
@@ -97,16 +97,17 @@ std::unordered_map<int,int> bfs(std::vector<Cell>& grid)
 void draw_path(std::unordered_map<int, int>& parents, std::vector<Cell>& grid)
 {
 	int curr = get_end_index(grid);
+	grid[curr].setEnd(); //Re-color the end
 	int dist = 0;
 	while (parents[curr]>=0)
 	{
 		std::cout << curr << '\n';
 		int p = parents[curr];
-		grid[p].setWall();
+		grid[p].setPath();
 		curr = p;
 
 	}
-	grid[get_start_index(grid)].setWall();
+	grid[get_start_index(grid)].setStart(); //Re-color the star
 	return;
 }
 

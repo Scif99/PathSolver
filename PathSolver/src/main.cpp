@@ -29,10 +29,12 @@ int main()
     }
 
 
-
     //Game Loop
     while (window.isOpen())
     {
+
+
+
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) //User can use left click to place walls
         {
@@ -109,8 +111,7 @@ int main()
                     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) //User can press Space to run the BFS
                     {
                         std::unordered_map<int,int> parents = bfs(v_cells);
-                        //draw_path(parents, v_cells);
-
+                        draw_path(parents, v_cells);
                     }
 
                     break;
