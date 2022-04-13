@@ -11,7 +11,12 @@
 std::vector<int> get_neighbours(int index, int dim)
 {
 	std::vector<int> ans;
-	return std::vector<int>{ index - 1,index + 1,index - dim,index + dim }; //left, right, up, down
+	if (index % dim != 0) ans.push_back(index - 1); //Left
+	if (index + 1 % dim != 0) ans.push_back(index + 1);//Right
+	if (index - dim > 0) ans.push_back(index - dim); //Up
+	if (index + dim < dim * dim - 1) ans.push_back(index + dim); //Down
+	return ans;
+
 }
 
 /*
@@ -54,14 +59,12 @@ std::unordered_map<int,int> bfs(std::vector<Cell>& grid)
 
 		if (grid[curr].isEnd())
 		{
-
 			return parent; //Done
 		}
 
 		std::vector<int> neighbours = get_neighbours(curr, 20); //DIM VARIABLE?
 		for (int i : neighbours)
 		{
-			if (i < 0 || i >= grid.size()) continue; //Bounds check
 			if (!grid[i].isPath())
 			{
 				grid[i].setPath();
@@ -78,7 +81,7 @@ std::unordered_map<int,int> bfs(std::vector<Cell>& grid)
 void draw_path(std::unordered_map<int, int>& parents, std::vector<Cell>& grid)
 {
 	int curr = get_end_index(grid);
-	while (parents[curr] >= 0)
+	while (parents[curr]>=0)
 	{
 		std::cout << curr << '\n';
 		int p = parents[curr];

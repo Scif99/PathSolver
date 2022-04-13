@@ -15,7 +15,7 @@ int main()
     //Create the grid
     int dim = 20; //dimensions of grid
     std::vector<Cell> v_cells; //Note that the grid is implemented as a single vector rather than a nested one.
-
+    v_cells.reserve((dim * dim) - 1);
 
     //Fill the grid
     for (int i = 0; i < dim; ++i) //Row 
@@ -23,9 +23,7 @@ int main()
         for (int j = 0;j < dim;++j) //Column
         {
             int units = w_size / dim;
-            //v_cells[i*dim +j] = (Cell{ j * units, i *units, w_size });//Note we want vector to go along columns --->, hence the ordering of i and j
-            v_cells.push_back(Cell{ j *units, i * units, w_size });//Note we want vector to go along columns --->, hence the ordering of i and j
-
+            v_cells.push_back(Cell{ j * units, i *units, w_size });//Note we want vector to go along columns --->, hence the ordering of i 
         }
 
     }
@@ -42,7 +40,7 @@ int main()
             {
                 auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
                 std::cerr << "row: " << row_no << "col: " << col_no << "index: "<<col_no*dim + row_no <<'\n';
-                auto& curr_cell = v_cells[dim * col_no + row_no]; //Cell (x,y) can be written as y*row_size + x. Don't want a copy
+                auto& curr_cell = v_cells[row_no*dim  + col_no]; //Cell (x,y) can be written as y*row_size + x. Don't want a copy
 
                 if(!curr_cell.isStart()) curr_cell.setWall(); //User cannot place walls on starting location
             }
@@ -81,7 +79,7 @@ int main()
                         if (sf::Mouse::getPosition(window).x >= 0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size) //Clamp...
                         {
                             auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
-                            auto& curr_cell = v_cells[dim * col_no + row_no]; //Cell (x,y) can be written as y*row_size + x. Don't want a copy
+                            auto& curr_cell = v_cells[row_no * dim + col_no]; //Cell (x,y) can be written as y*row_size + x. Don't want a copy
 
                             for (auto& cell : v_cells) //Reset the previous starting cell
                             {
@@ -97,7 +95,7 @@ int main()
                             if (sf::Mouse::getPosition(window).x >= 0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size) //Clamp...
                             {
                                 auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
-                                auto& curr_cell = v_cells[dim * col_no + row_no]; //Cell (x,y) can be written as y*row_size + x. Don't want a copy
+                                auto& curr_cell = v_cells[row_no*dim + col_no]; //Cell (x,y) can be written as y*row_size + x. Don't want a copy
 
                                 for (auto& cell : v_cells) //Reset the previous starting cell
                                 {
