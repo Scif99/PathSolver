@@ -23,7 +23,7 @@ int main()
         for (int j = 0;j < dim;++j) //Column
         {
             int units = w_size / dim;
-            v_cells.push_back(Cell{ j * units, i *units, w_size });//Note we want vector to go along columns --->, hence the ordering of i 
+            v_cells.push_back(Cell{ j * units, i *units, w_size });//The cells are stored in row-major order ----->
         }
 
     }
@@ -33,11 +33,9 @@ int main()
     while (window.isOpen())
     {
 
-
-
-
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) //User can use left click to place walls
         {
+
             if (sf::Mouse::getPosition(window).x >=0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size)
             {
                 auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
@@ -53,12 +51,7 @@ int main()
             {
                 cell.reset();
             }
-
         }
-
-
-
-
 
         //Process Events    
         sf::Event evnt;
@@ -122,9 +115,7 @@ int main()
 
         }
 
-
-
-
+        //Draw
         window.clear(); //Clear Screen so contents from previous frame isnt 
         for (const auto& cell : v_cells) cell.draw(window, sf::RenderStates::Default);
         window.display(); //Swap buffers and display on screen

@@ -11,6 +11,7 @@
 std::vector<int> get_neighbours(int index, int dim)
 {
 	std::vector<int> ans;
+	ans.reserve(4);
 	if (index % dim != 0) ans.push_back(index - 1); //Left
 	if (index - dim > 0) ans.push_back(index - dim); //Up
 	if (index + 1 % dim != 0) ans.push_back(index + 1);//Right
@@ -68,7 +69,7 @@ std::unordered_map<int,int> bfs(std::vector<Cell>& grid) //Returns a map contain
 
 		if (grid[curr].isEnd()) //End early if we find the target
 		{
-			//std::cout << "Target found in " << distance[curr] << " steps" << '\n';
+			std::cout << "Target found in " << distance[curr] << " steps" << '\n';
 			return parent; //Done
 		}
 
@@ -76,7 +77,7 @@ std::unordered_map<int,int> bfs(std::vector<Cell>& grid) //Returns a map contain
 		for (int i : neighbours)
 		{
 			
-			if (!grid[i].isExplored())
+			if (!grid[i].isExplored() && !grid[i].isWall())
 			{
 				//std::cerr << i << " is an unseen neighbour of " << curr << '\n';
 				frontier.push(i);
@@ -101,7 +102,6 @@ void draw_path(std::unordered_map<int, int>& parents, std::vector<Cell>& grid)
 	int dist = 0;
 	while (parents[curr]>=0)
 	{
-		std::cout << curr << '\n';
 		int p = parents[curr];
 		grid[p].setPath();
 		curr = p;

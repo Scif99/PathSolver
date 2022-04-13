@@ -19,6 +19,7 @@ public:
 	bool isExplored() const { return is_explored_; }
 	bool isFrontier() const { return is_frontier_; }
 	bool isPath() const { return is_path_; }
+	bool isWall() const { return is_wall_; }
 
 private:
 	sf::RectangleShape rect_;
