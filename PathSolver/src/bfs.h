@@ -77,7 +77,7 @@ std::unordered_map<int,int> bfs(std::vector<Cell>& grid) //Returns a map contain
 		for (int i : neighbours)
 		{
 			
-			if (!grid[i].isExplored() && !grid[i].isWall())
+			if (!grid[i].isExplored() && !grid[i].isWall()) //Don't add walls to the frontier
 			{
 				//std::cerr << i << " is an unseen neighbour of " << curr << '\n';
 				frontier.push(i);

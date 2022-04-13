@@ -42,6 +42,7 @@ int main()
                 auto& curr_cell = v_cells[row_no*dim  + col_no]; //Cell (x,y) can be written as y*row_size + x. Don't want a copy
 
                 if(!curr_cell.isStart()) curr_cell.setWall(); //User cannot place walls on starting location
+
             }
         }
 
@@ -103,8 +104,19 @@ int main()
 
                     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) //User can press Space to run the BFS
                     {
+
+                        
+
+
+                        auto t1 = std::chrono::high_resolution_clock::now(); //time before
+
                         std::unordered_map<int,int> parents = bfs(v_cells);
                         draw_path(parents, v_cells);
+
+                        auto t2 = std::chrono::high_resolution_clock::now(); //time after
+                        auto sec = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1); /* Getting number of milliseconds as an integer. */
+
+                        std::cout << sec.count() << "s\n";
                     }
 
                     break;
