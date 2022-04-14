@@ -21,3 +21,4 @@ std::pair<int, int> getCoords(const sf::Window& win, int win_size, int grid_dim)
 	int row_no = y / unit;
 	return { row_no,col_no };
 }
+

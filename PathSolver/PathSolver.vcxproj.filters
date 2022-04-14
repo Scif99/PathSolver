@@ -20,16 +20,19 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\cell.cpp">
+    <ClInclude Include="src\node.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\cell.h">
+    <ClInclude Include="src\node.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\utility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\bfs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

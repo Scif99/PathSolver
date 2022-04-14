@@ -5,7 +5,7 @@
 #include<thread>
 #include<chrono>
 
-#include "cell.h"
+#include "Graph.h"
 #include "utility.h"
 
 std::vector<int> get_neighbours(int index, int dim)
@@ -20,46 +20,9 @@ std::vector<int> get_neighbours(int index, int dim)
 
 }
 
-/*
-Returns the index of the starting cell
 
-Assumes that a start node exists
-*/
-int get_start_index(const std::vector<Cell>& grid)
-{
-	for (int i =0;i<grid.size();++i)
-	{
-		if (grid[i].isStart()) return i;
-	}
-}
 
-bool has_start(const std::vector<Cell>& grid)
-{
-	for (int i = 0;i < grid.size();++i)
-	{
-		if (grid[i].isStart()) return true;
-	}
-	return false;
-}
-
-int get_end_index(const std::vector<Cell>& grid)
-{
-	for (int i = 0;i < grid.size();++i)
-	{
-		if (grid[i].isEnd()) return i;
-	}
-}
-
-bool has_end(const std::vector<Cell>& grid)
-{
-	for (int i = 0;i < grid.size();++i)
-	{
-		if (grid[i].isEnd()) return true;
-	}
-	return false;
-}
-
-std::unordered_map<int, int> bfs(std::vector<Cell>& grid) //Returns a map containing the parents of each cell
+std::unordered_map<int, int> bfs(Graph& graph) //Returns a map containing the parents of each cell
 {
 	std::unordered_map<int, int> parents; //data[i].first = parent. data[i].second = distance 
 	std::unordered_map<int, int> distance; //data[i].first = parent. data[i].second = distance 
@@ -67,25 +30,29 @@ std::unordered_map<int, int> bfs(std::vector<Cell>& grid) //Returns a map contai
 	std::queue<int> frontier; //Queue containts the indices of the cells being explored
 	
 
-	int start = get_start_index(grid);
+	int start = graph.get_start();
 
 	
 	frontier.push(start);
 	parents[start] = -1;
 	distance[start] = 0;
-	grid[start].isExplored();
+	graph[start].isExplored();
 	//Assert: 
+
+	int explored = 1;
 
 	while (!frontier.empty())
 	{
 		
 		int curr = frontier.front();
-		grid[curr].setExplored();
+		graph[curr].setExplored();
 		frontier.pop();
 		
-		//std::cerr << "Exploring: " << curr << '\n';
+		//std::cerr << "Exploring Node " << curr << "\tNodes Explored: " <<explored<<"\n";
+		//++explored;
+		//if (explored > 399) return parents;
 
-		if (grid[curr].isEnd()) //End early if we find the target
+		if (graph[curr].isEnd()) //End early if we find the target
 		{
 			std::cout << "Target found in " << distance[curr]<< " steps" << '\n';
 			return parents; //Done
@@ -95,17 +62,15 @@ std::unordered_map<int, int> bfs(std::vector<Cell>& grid) //Returns a map contai
 		for (const auto& i : neighbours)
 		{
 			
-			if (!grid[i].isExplored() && !grid[i].isWall()) //Don't add walls to the frontier
+			if (!graph[i].isExplored() && !graph[i].isWall()) //Don't add walls to the frontier
 			{
-				//std::cerr << i << " is an unseen neighbour of " << curr << '\n';
-				frontier.push(i);
-				distance[i]= distance[curr]+ 1;
-				grid[i].setFrontier();
-				parents[i]= curr;
-				
-			}
 
-			//else std::cout << i << " has been seen before... ignoring " << '\n';
+				frontier.push(i);
+				distance[i] = distance[curr] + 1;
+				graph[i].setFrontier();
+				parents[i] = curr;
+
+			}
 		}
 
 	}
@@ -113,19 +78,19 @@ std::unordered_map<int, int> bfs(std::vector<Cell>& grid) //Returns a map contai
 
 }
 
-void draw_path(std::unordered_map<int, int>& parents, std::vector<Cell>& grid)
+void draw_path(std::unordered_map<int, int>& parents, Graph& graph)
 {
-	int curr = get_end_index(grid);
-	grid[curr].setEnd(); //Re-color the end
+	int curr = graph.get_end();
+	graph[curr].setEnd(); //Re-color the end
 	int dist = 0;
 	while (parents[curr]>=0)
 	{
 		int p = parents[curr];
-		grid[p].setPath();
+		graph[p].setPath();
 		curr = p;
 
 	}
-	grid[get_start_index(grid)].setStart(); //Re-color the star
+	graph[graph.get_start()].setStart(); //Re-color the star
 	return;
 }
 
