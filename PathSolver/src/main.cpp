@@ -28,12 +28,23 @@ int main()
 
     }
 
+    bool done = false; //Boolean to determine whether the search has finished
 
     //Game Loop
     while (window.isOpen())
     {
 
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) //User can use left click to place walls
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) //Press R to reset the grid
+        {
+            for (auto& cell : v_cells)
+            {
+                cell.reset();
+            }
+            done = false;
+        }
+
+
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && done != true) //User can use left click to place walls
         {
 
             if (sf::Mouse::getPosition(window).x >=0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size)
@@ -46,13 +57,7 @@ int main()
             }
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) //Press R to reset the grid
-        {
-            for (auto& cell : v_cells)
-            {
-                cell.reset();
-            }
-        }
+
 
         //Process Events    
         sf::Event evnt;
@@ -69,6 +74,7 @@ int main()
                 case sf::Event::KeyPressed:
                 {
 
+                   
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) //User can press 1 to change the start location to mouse position
                     {
                         if (sf::Mouse::getPosition(window).x >= 0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size) //Clamp...
@@ -109,14 +115,16 @@ int main()
 
                         if (has_start(v_cells) && has_end(v_cells))
                         {
-                            std::unordered_map<int, int> parents = bfs(v_cells);
-                            std::cout << "BFSing\n";
+                            std::unordered_map<int, int> parents = bfs(v_cells, dim);
                             draw_path(parents, v_cells);
 
                             auto t2 = std::chrono::high_resolution_clock::now(); //time after
                             auto sec = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1); /* Getting number of milliseconds as an integer. */
 
-                            std::cout << sec.count() << "s\n"; //Log time
+                            std::cout << "Search took\t"<<sec.count() << "s\n"; //Log time
+                            done = true;
+                            std::cout << "Press R to reset grid\n"; //Log time
+
                         }
                         else std::cout << "Please place a start and end location before searching\n";
                     }
