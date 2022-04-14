@@ -33,6 +33,15 @@ int get_start_index(const std::vector<Cell>& grid)
 	}
 }
 
+bool has_start(const std::vector<Cell>& grid)
+{
+	for (int i = 0;i < grid.size();++i)
+	{
+		if (grid[i].isStart()) return true;
+	}
+	return false;
+}
+
 int get_end_index(const std::vector<Cell>& grid)
 {
 	for (int i = 0;i < grid.size();++i)
@@ -41,6 +50,14 @@ int get_end_index(const std::vector<Cell>& grid)
 	}
 }
 
+bool has_end(const std::vector<Cell>& grid)
+{
+	for (int i = 0;i < grid.size();++i)
+	{
+		if (grid[i].isEnd()) return true;
+	}
+	return false;
+}
 
 std::unordered_map<int, int> bfs(std::vector<Cell>& grid) //Returns a map containing the parents of each cell
 {

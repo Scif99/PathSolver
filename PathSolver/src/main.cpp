@@ -107,13 +107,18 @@ int main()
 
                         auto t1 = std::chrono::high_resolution_clock::now(); //time before
 
-                        std::unordered_map<int, int> parents = bfs(v_cells);
-                        draw_path(parents, v_cells);
+                        if (has_start(v_cells) && has_end(v_cells))
+                        {
+                            std::unordered_map<int, int> parents = bfs(v_cells);
+                            std::cout << "BFSing\n";
+                            draw_path(parents, v_cells);
 
-                        auto t2 = std::chrono::high_resolution_clock::now(); //time after
-                        auto sec = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1); /* Getting number of milliseconds as an integer. */
+                            auto t2 = std::chrono::high_resolution_clock::now(); //time after
+                            auto sec = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1); /* Getting number of milliseconds as an integer. */
 
-                        std::cout << sec.count() << "s\n"; //Log time
+                            std::cout << sec.count() << "s\n"; //Log time
+                        }
+                        else std::cout << "Please place a start and end location before searching\n";
                     }
 
                     break;
