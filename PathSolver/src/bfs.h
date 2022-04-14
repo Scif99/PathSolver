@@ -41,19 +41,20 @@ int get_end_index(const std::vector<Cell>& grid)
 	}
 }
 
-std::unordered_map<int,int> bfs(std::vector<Cell>& grid) //Returns a map containing the parents of each cell
+
+std::unordered_map<int, int> bfs(std::vector<Cell>& grid) //Returns a map containing the parents of each cell
 {
-	std::unordered_map<int, int> parent; //parent[i] is the index from which i came from.
-	std::unordered_map<int, int> distance; //distance[i] is the distance of cell at index i from the start.
+	std::unordered_map<int, int> parents; //data[i].first = parent. data[i].second = distance 
+	std::unordered_map<int, int> distance; //data[i].first = parent. data[i].second = distance 
+
 	std::queue<int> frontier; //Queue containts the indices of the cells being explored
 	
 
-	int start = get_start_index(grid);	
-	
+	int start = get_start_index(grid);
 
 	
 	frontier.push(start);
-	parent[start] = -1;
+	parents[start] = -1;
 	distance[start] = 0;
 	grid[start].isExplored();
 	//Assert: 
@@ -69,21 +70,21 @@ std::unordered_map<int,int> bfs(std::vector<Cell>& grid) //Returns a map contain
 
 		if (grid[curr].isEnd()) //End early if we find the target
 		{
-			std::cout << "Target found in " << distance[curr] << " steps" << '\n';
-			return parent; //Done
+			std::cout << "Target found in " << distance[curr]<< " steps" << '\n';
+			return parents; //Done
 		}
 
 		std::vector<int> neighbours = get_neighbours(curr, 20); //Dim should be a variable?
-		for (int i : neighbours)
+		for (const auto& i : neighbours)
 		{
 			
 			if (!grid[i].isExplored() && !grid[i].isWall()) //Don't add walls to the frontier
 			{
 				//std::cerr << i << " is an unseen neighbour of " << curr << '\n';
 				frontier.push(i);
-				distance[i] = distance[curr] + 1;
+				distance[i]= distance[curr]+ 1;
 				grid[i].setFrontier();
-				parent[i] = curr;
+				parents[i]= curr;
 				
 			}
 
@@ -91,7 +92,7 @@ std::unordered_map<int,int> bfs(std::vector<Cell>& grid) //Returns a map contain
 		}
 
 	}
-	return parent;
+	return parents;
 
 }
 
