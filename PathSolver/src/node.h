@@ -21,6 +21,7 @@ public:
 	bool isPath() const { return is_path_; }
 	bool isWall() const { return is_wall_; }
 
+	
 private:
 	sf::RectangleShape rect_;
 	bool is_wall_;

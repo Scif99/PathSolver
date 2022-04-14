@@ -3,7 +3,6 @@
 
 #include <unordered_map>
 #include <vector>
-
 #include "node.h"
 
 class Graph 
@@ -11,18 +10,19 @@ class Graph
 public:
 	Graph(int dim);
 	int dim() const { return dim_; }
-	int size() const { return (dim_ * dim_) - 1; }
+	int size() const { return v_nodes_.size(); }
 	void fill(int w_size);
 
 	const Node& operator[](int i) const  { return v_nodes_[i]; }
 	Node& operator[](int i) { return v_nodes_[i]; }
 
 
-	int get_start_index();
+	int get_start();
 	bool has_start();
-	int get_end_index();
+	int get_end();
 	bool has_end();
 
+	
 private:
 	int dim_;
 	std::vector<Node> v_nodes_;
@@ -48,9 +48,10 @@ void Graph::fill(int w_size) //Fill the graph with nodes
 	}
 }
 
-int Graph::get_start_index()
+
+int Graph::get_start()
 {
-	for (int i = 0;i < dim_;++i)
+	for (int i = 0;i < size();++i)
 	{
 		if (v_nodes_[i].isStart()) return i;
 	}
@@ -58,16 +59,16 @@ int Graph::get_start_index()
 
 bool Graph::has_start()
 {
-	for (int i = 0;i < dim_;++i)
+	for (int i = 0;i < size();++i)
 	{
 		if (v_nodes_[i].isStart()) return true;
 	}
 	return false;
 }
 
-int Graph::get_end_index()
+int Graph::get_end()
 {
-	for (int i = 0;i < dim_;++i)
+	for (int i = 0;i < size();++i)
 	{
 		if (v_nodes_[i].isEnd()) return i;
 	}
@@ -75,7 +76,7 @@ int Graph::get_end_index()
 
 bool Graph::has_end()
 {
-	for (int i = 0;i < dim_;++i)
+	for (int i = 0;i < size();++i)
 	{
 		if (v_nodes_[i].isEnd()) return true;
 	}

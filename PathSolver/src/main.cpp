@@ -96,11 +96,10 @@ int main()
 
                         auto t1 = std::chrono::high_resolution_clock::now(); //time before
 
-                        if (has_start(graph) && has_end(graph))
+                        if (graph.has_end() && graph.has_start())
                         {
-                            std::unordered_map<int, int> parents = bfs(v_cells);
-                            std::cout << "BFSing\n";
-                            draw_path(parents, v_cells);
+                            std::unordered_map<int, int> parents = bfs(graph);
+                            draw_path(parents, graph);
 
                             auto t2 = std::chrono::high_resolution_clock::now(); //time after
                             auto sec = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1); /* Getting number of milliseconds as an integer. */
@@ -120,7 +119,7 @@ int main()
 
         //Draw
         window.clear(); //Clear Screen so contents from previous frame isnt 
-        for (const auto& cell : v_cells) cell.draw(window, sf::RenderStates::Default);
+        for (int i = 0; i < graph.size();++i) graph[i].draw(window, sf::RenderStates::Default);
         window.display(); //Swap buffers and display on screen
     }
 
