@@ -150,9 +150,10 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\cell.h" />
-    <ClInclude Include="src\cell.cpp" />
+    <ClInclude Include="src\node.h" />
+    <ClInclude Include="src\node.cpp" />
     <ClInclude Include="src\bfs.h" />
+    <ClInclude Include="src\Graph.h" />
     <ClInclude Include="src\utility.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

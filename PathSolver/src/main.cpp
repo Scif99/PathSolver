@@ -1,9 +1,10 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-#include "cell.h"
+#include "node.h"
 #include "utility.h"
 #include "bfs.h"
+#include "Graph.h"
 
 
 
@@ -14,19 +15,9 @@ int main()
 
     //Create the grid
     int dim = 20; //dimensions of grid
-    std::vector<Cell> v_cells; //Note that the grid is implemented as a single vector rather than a nested one.
-    v_cells.reserve((dim * dim) - 1);
 
-    //Fill the grid
-    for (int i = 0; i < dim; ++i) //Row 
-    {
-        for (int j = 0;j < dim;++j) //Column
-        {
-            int units = w_size / dim;
-            v_cells.push_back(Cell{ j * units, i *units, w_size });//The cells are stored in row-major order ----->
-        }
-
-    }
+    Graph graph{dim };
+    graph.fill(w_size);
 
     bool done = false; //Boolean to determine whether the search has finished
 
@@ -36,9 +27,9 @@ int main()
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) //Press R to reset the grid
         {
-            for (auto& cell : v_cells)
+            for (int i = 0; i<graph.size();++i)
             {
-                cell.reset();
+                graph[i].reset();
             }
             done = false;
         }
@@ -50,9 +41,9 @@ int main()
             if (sf::Mouse::getPosition(window).x >=0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size)
             {
                 auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
-                auto& curr_cell = v_cells[row_no*dim  + col_no]; //Cell (x,y) can be written as y*row_size + x. Don't want a copy
+                auto& curr_node = graph[row_no*dim  + col_no]; //Cell (x,y) can be written as y*row_size + x. Don't want a copy
 
-                if(!curr_cell.isStart()) curr_cell.setWall(); //User cannot place walls on starting location
+                if(!curr_node.isStart()) curr_node.setWall(); //User cannot place walls on starting location
 
             }
         }
@@ -80,14 +71,14 @@ int main()
                         if (sf::Mouse::getPosition(window).x >= 0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size) //Clamp...
                         {
                             auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
-                            auto& curr_cell = v_cells[row_no * dim + col_no]; //Cell (x,y) can be written as y*row_size + x. Don't want a copy
+                            auto& curr_node = graph[row_no * dim + col_no]; //Cell (x,y) can be written as y*row_size + x. Don't want a copy
 
-                            for (auto& cell : v_cells) //Reset the previous starting cell
+                            for (int i = 0; i < graph.size();++i) //Reset the previous starting cell
                             {
-                                if (cell.isStart()) cell.reset();
+                                if (graph[i].isStart()) graph[i].reset();
                             }
 
-                            curr_cell.setStart();
+                            curr_node.setStart();
                             std::cout << "Placed start at " << row_no * dim + col_no << '\n';
                         }
                     }
@@ -110,20 +101,14 @@ int main()
 
                     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) //User can press Space to run the BFS
                     {
-
-                        auto t1 = std::chrono::high_resolution_clock::now(); //time before
-
                         if (has_start(v_cells) && has_end(v_cells))
                         {
-                            std::unordered_map<int, int> parents = bfs(v_cells, dim);
-                            draw_path(parents, v_cells);
-
-                            auto t2 = std::chrono::high_resolution_clock::now(); //time after
-                            auto sec = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1); /* Getting number of milliseconds as an integer. */
-
-                            std::cout << "Search took\t"<<sec.count() << "s\n"; //Log time
-                            done = true;
-                            std::cout << "Press R to reset grid\n"; //Log time
+                            //std::unordered_map<int, int> parents = bfs(v_cells, dim);
+                            if (done != true) 
+                            {
+                                int index = bfs_step(v_cells, dim, get_start_index(v_cells), parents, distance);
+                                if (grid[index].isEnd()) done = true;
+                            }
 
                         }
                         else std::cout << "Please place a start and end location before searching\n";

@@ -55,57 +55,39 @@ bool has_end(const std::vector<Cell>& grid)
 	return false;
 }
 
-std::unordered_map<int, int> bfs(std::vector<Cell>& grid, int dim) //Returns a map containing the parents of each cell
+
+/// <summary>
+/// Explores neighbours of the ceell at the front of the queue
+/// </summary>
+/// <param name="grid"></param>
+/// <param name="dim"></param>
+/// <param name="frontier"></param>
+/// <param name="parents"></param>
+/// <param name="distance"></param>
+/// <returns>Returns index of the cell at the front of the queue</returns>
+int bfs_step(std::vector<Cell>& grid, const int& dim, int& front, std::unordered_map<int, int>& parents, std::unordered_map<int, int>& distance) 
 {
-	std::unordered_map<int, int> parents;  
-	std::unordered_map<int, int> distance; 
-	std::queue<int> frontier; //Queue containts the indices of the cells being explored
-	
+	//parents[front] = ??
+	//distance[front] = ??
+	grid[front].isExplored();
 
-	int start = get_start_index(grid);
+	std::vector<int> neighbours = get_neighbours(front, dim);
 
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <param name="grid"></param>
-	/// <param name="dim"></param>
-	/// <returns></returns>
-	frontier.push(start);
-	parents[start] = -1;
-	distance[start] = 0;
-	grid[start].isExplored();
-	//Assert: 
-
-	while (!frontier.empty())
+	if (grid[front].isEnd()) //End early if we find the target
 	{
+
+		return -1; //Done???
+	}
+
+	for(const int& i : neighbours)
+	{
+		if(!grid[i].isExplored() && !grid[i].isWall())
 		
-		int curr = frontier.front();
-		grid[curr].setExplored();
-		frontier.pop();
-		
-		std::cerr << "Exploring: " << curr << '\n';
-
-		if (grid[curr].isEnd()) //End early if we find the target
-		{
-			std::cout << "Target found in " << distance[curr]<< " steps" << '\n';
-			return parents; //Done
-		}
-
-		std::vector<int> neighbours = get_neighbours(curr, dim);
-		for (const auto& i : neighbours)
-		{
-			
-			if (!grid[i].isExplored() && !grid[i].isWall()) //Don't add walls to the frontier
-			{
-
-				frontier.push(i);
-				distance[i]= distance[curr]+ 1;
-				grid[i].setFrontier();
-				parents[i]= curr;
+		frontier.push(i);
+		distance[i]= distance[front]+ 1;
+		grid[i].setFrontier();
+		parents[i]= front;
 				
-			}
-		}
-
 	}
 	return parents;
 
