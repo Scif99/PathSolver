@@ -20,7 +20,11 @@ std::vector<int> get_neighbours(int index, int dim)
 
 }
 
+/*
+Returns the index of the starting cell
 
+Assumes that a start node exists
+*/
 int get_start_index(const std::vector<Cell>& grid)
 {
 	for (int i =0;i<grid.size();++i)
@@ -55,39 +59,55 @@ bool has_end(const std::vector<Cell>& grid)
 	return false;
 }
 
-
-/// <summary>
-/// Explores neighbours of the ceell at the front of the queue
-/// </summary>
-/// <param name="grid"></param>
-/// <param name="dim"></param>
-/// <param name="frontier"></param>
-/// <param name="parents"></param>
-/// <param name="distance"></param>
-/// <returns>Returns index of the cell at the front of the queue</returns>
-int bfs_step(std::vector<Cell>& grid, const int& dim, int& front, std::unordered_map<int, int>& parents, std::unordered_map<int, int>& distance) 
+std::unordered_map<int, int> bfs(std::vector<Cell>& grid) //Returns a map containing the parents of each cell
 {
-	//parents[front] = ??
-	//distance[front] = ??
-	grid[front].isExplored();
+	std::unordered_map<int, int> parents; //data[i].first = parent. data[i].second = distance 
+	std::unordered_map<int, int> distance; //data[i].first = parent. data[i].second = distance 
 
-	std::vector<int> neighbours = get_neighbours(front, dim);
+	std::queue<int> frontier; //Queue containts the indices of the cells being explored
+	
 
-	if (grid[front].isEnd()) //End early if we find the target
+	int start = get_start_index(grid);
+
+	
+	frontier.push(start);
+	parents[start] = -1;
+	distance[start] = 0;
+	grid[start].isExplored();
+	//Assert: 
+
+	while (!frontier.empty())
 	{
-
-		return -1; //Done???
-	}
-
-	for(const int& i : neighbours)
-	{
-		if(!grid[i].isExplored() && !grid[i].isWall())
 		
-		frontier.push(i);
-		distance[i]= distance[front]+ 1;
-		grid[i].setFrontier();
-		parents[i]= front;
+		int curr = frontier.front();
+		grid[curr].setExplored();
+		frontier.pop();
+		
+		//std::cerr << "Exploring: " << curr << '\n';
+
+		if (grid[curr].isEnd()) //End early if we find the target
+		{
+			std::cout << "Target found in " << distance[curr]<< " steps" << '\n';
+			return parents; //Done
+		}
+
+		std::vector<int> neighbours = get_neighbours(curr, 20); //Dim should be a variable?
+		for (const auto& i : neighbours)
+		{
+			
+			if (!grid[i].isExplored() && !grid[i].isWall()) //Don't add walls to the frontier
+			{
+				//std::cerr << i << " is an unseen neighbour of " << curr << '\n';
+				frontier.push(i);
+				distance[i]= distance[curr]+ 1;
+				grid[i].setFrontier();
+				parents[i]= curr;
 				
+			}
+
+			//else std::cout << i << " has been seen before... ignoring " << '\n';
+		}
+
 	}
 	return parents;
 

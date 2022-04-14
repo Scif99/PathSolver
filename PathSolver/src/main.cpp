@@ -1,10 +1,9 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-#include "node.h"
+#include "graph.h"
 #include "utility.h"
 #include "bfs.h"
-#include "Graph.h"
 
 
 
@@ -16,26 +15,14 @@ int main()
     //Create the grid
     int dim = 20; //dimensions of grid
 
-    Graph graph{dim };
+    Graph graph(dim);
     graph.fill(w_size);
-
-    bool done = false; //Boolean to determine whether the search has finished
 
     //Game Loop
     while (window.isOpen())
     {
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) //Press R to reset the grid
-        {
-            for (int i = 0; i<graph.size();++i)
-            {
-                graph[i].reset();
-            }
-            done = false;
-        }
-
-
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && done != true) //User can use left click to place walls
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) //User can use left click to place walls
         {
 
             if (sf::Mouse::getPosition(window).x >=0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size)
@@ -48,7 +35,13 @@ int main()
             }
         }
 
-
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) //Press R to reset the grid
+        {
+            for (int i = 0; i < graph.size();++i)
+            {
+                graph[i].reset();
+            }
+        }
 
         //Process Events    
         sf::Event evnt;
@@ -65,7 +58,6 @@ int main()
                 case sf::Event::KeyPressed:
                 {
 
-                   
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) //User can press 1 to change the start location to mouse position
                     {
                         if (sf::Mouse::getPosition(window).x >= 0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size) //Clamp...
@@ -88,28 +80,32 @@ int main()
                             if (sf::Mouse::getPosition(window).x >= 0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size) //Clamp...
                             {
                                 auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
-                                auto& curr_cell = v_cells[row_no*dim + col_no]; //Cell (x,y) can be written as y*row_size + x. Don't want a copy
+                                auto& curr_node = graph[row_no*dim + col_no]; //Cell (x,y) can be written as y*row_size + x. Don't want a copy
 
-                                for (auto& cell : v_cells) //Reset the previous starting cell
+                                for (int i = 0; i < graph.size();++i) //Reset the previous starting cell
                                 {
-                                    if (cell.isEnd()) cell.reset();
+                                    if (graph[i].isEnd()) graph[i].reset();
                                 }
                                 std::cout << "Placed end at " << row_no * dim + col_no << '\n';
-                                curr_cell.setEnd();
+                                curr_node.setEnd();
                             }
                     }
 
                     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) //User can press Space to run the BFS
                     {
-                        if (has_start(v_cells) && has_end(v_cells))
-                        {
-                            //std::unordered_map<int, int> parents = bfs(v_cells, dim);
-                            if (done != true) 
-                            {
-                                int index = bfs_step(v_cells, dim, get_start_index(v_cells), parents, distance);
-                                if (grid[index].isEnd()) done = true;
-                            }
 
+                        auto t1 = std::chrono::high_resolution_clock::now(); //time before
+
+                        if (has_start(graph) && has_end(graph))
+                        {
+                            std::unordered_map<int, int> parents = bfs(v_cells);
+                            std::cout << "BFSing\n";
+                            draw_path(parents, v_cells);
+
+                            auto t2 = std::chrono::high_resolution_clock::now(); //time after
+                            auto sec = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1); /* Getting number of milliseconds as an integer. */
+
+                            std::cout << sec.count() << "s\n"; //Log time
                         }
                         else std::cout << "Please place a start and end location before searching\n";
                     }

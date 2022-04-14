@@ -47,6 +47,7 @@ void Graph::fill(int w_size) //Fill the graph with nodes
 
 	}
 }
+
 int Graph::get_start_index()
 {
 	for (int i = 0;i < dim_;++i)
