@@ -14,7 +14,7 @@ std::vector<int> get_neighbours(int index, int dim)
 	ans.reserve(4);
 	if (index % dim != 0) ans.push_back(index - 1); //Left
 	if (index - dim > 0) ans.push_back(index - dim); //Up
-	if (index + 1 % dim != 0) ans.push_back(index + 1);//Right
+	if ((index + 1) % dim != 0) ans.push_back(index + 1);//Right
 	if (index + dim < dim * dim - 1) ans.push_back(index + dim); //Down
 	return ans;
 
