@@ -101,7 +101,7 @@ int main()
                         if (graph.has_end() && graph.has_start())
                         {
                             std::unordered_map<int, int> parents = bfs(graph);
-                            //draw_path(parents, graph);
+                            draw_path(parents, graph);
 
                             auto t2 = std::chrono::high_resolution_clock::now(); //time after
                             auto sec = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1); /* Getting number of seconds as an integer. */

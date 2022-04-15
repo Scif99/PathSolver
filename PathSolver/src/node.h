@@ -43,7 +43,6 @@ Node::Node(int x, int y, int w_size)
 	rect_.setFillColor(sf::Color::White); //set Nodes to white
 	rect_.setOutlineColor(sf::Color::Black);
 	rect_.setOutlineThickness(1);
-
 }
 
 void Node::draw(sf::RenderTarget& target, sf::RenderStates states) const

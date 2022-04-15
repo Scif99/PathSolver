@@ -24,9 +24,7 @@ std::unordered_map<int, int> bfs(Graph& graph) //Returns a map containing the pa
 
 
 	graph[start].setSeen();
-	//Assert: 
-
-	int explored = 1;
+	//Assert: frontier contains ...
 
 	while (!frontier.empty())
 	{
@@ -54,7 +52,30 @@ std::unordered_map<int, int> bfs(Graph& graph) //Returns a map containing the pa
 
 void draw_path(std::unordered_map<int, int>& parents, Graph& graph)
 {
-	int curr = graph.get_end();
+	int start = graph.get_start();
+	int end = graph.get_end();
+	//Check if a path exists
+	bool path_exists = false;
+	for(const auto& p : parents)
+	{
+		if (p.first == end)
+		{
+			path_exists = true;
+			std::cout << "Path found...\n";
+			break;
+			
+		}
+
+	}
+
+	if(!path_exists)
+	{
+		std::cout << "No path exists\n";
+		graph[start].setStart(); //Re-color the star
+		return;
+	}
+
+	int curr = end;
 	graph[curr].setEnd(); //Re-color the end
 	int dist = 0;
 
@@ -66,7 +87,7 @@ void draw_path(std::unordered_map<int, int>& parents, Graph& graph)
 		++dist;
 		std::cout << "dist: " << dist << '\n';
 	}
-	graph[graph.get_start()].setStart(); //Re-color the star
+	graph[start].setStart(); //Re-color the star
 	return;
 }
 
