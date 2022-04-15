@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 
 #include <unordered_map>
 #include <vector>
@@ -9,10 +8,13 @@ class Graph
 {
 public:
 	Graph(int dim);
+
 	int dim() const { return dim_; }
 	int size() const { return v_nodes_.size(); }
 	void fill(int w_size);
+	std::vector<int> get_neighbours(int index);
 
+	//Accessors
 	const Node& operator[](int i) const  { return v_nodes_[i]; }
 	Node& operator[](int i) { return v_nodes_[i]; }
 
@@ -30,11 +32,12 @@ private:
 	//std::unordered_map<int, int> distance_;
 };
 
+
 Graph::Graph(int dim)
 	:dim_{ dim }, v_nodes_{ {} }
 {}
 
-void Graph::fill(int w_size) //Fill the graph with nodes
+void Graph::fill(int w_size) //Fill the graph up with nodes
 {
 	//Fill the grid
 	for (int i = 0; i < dim_; ++i) //Row 
@@ -48,7 +51,19 @@ void Graph::fill(int w_size) //Fill the graph with nodes
 	}
 }
 
+//Return a vector containing indices of a node's neighbours
+std::vector<int> Graph::get_neighbours(int index)
+{
+	std::vector<int> ans;
+	if (index % dim_ != 0) ans.push_back(index - 1); //Left
+	if (index - dim_ > 0) ans.push_back(index - dim_); //Up
+	if ((index + 1) % dim_ != 0) ans.push_back(index + 1);//Right
+	if (index + dim_ < dim_ * dim_ - 1) ans.push_back(index + dim_); //Down
+	return ans;
 
+}
+
+//Return the index of the starting node
 int Graph::get_start()
 {
 	for (int i = 0;i < size();++i)
@@ -57,6 +72,7 @@ int Graph::get_start()
 	}
 }
 
+//Check if the graph has a starting node
 bool Graph::has_start()
 {
 	for (int i = 0;i < size();++i)
@@ -66,6 +82,7 @@ bool Graph::has_start()
 	return false;
 }
 
+//Return the index of the end node
 int Graph::get_end()
 {
 	for (int i = 0;i < size();++i)
@@ -74,6 +91,7 @@ int Graph::get_end()
 	}
 }
 
+//Check if the graph has an end node
 bool Graph::has_end()
 {
 	for (int i = 0;i < size();++i)

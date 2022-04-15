@@ -1,7 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-//Log some info...
 
 void clamp(int& pos, int low, int high)
 {

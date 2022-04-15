@@ -9,14 +9,14 @@ public:
 	void setWall();
 	void setStart();
 	void setEnd();
-	void setExplored();
+	void setSeen();
 	void setFrontier();
 	void setPath();
 	void reset();
 
 	bool isStart() const { return is_start_; }
 	bool isEnd() const { return is_end_; }
-	bool isExplored() const { return is_explored_; }
+	bool isSeen() const { return is_seen_; }
 	bool isFrontier() const { return is_frontier_; }
 	bool isPath() const { return is_path_; }
 	bool isWall() const { return is_wall_; }
@@ -27,7 +27,7 @@ private:
 	bool is_wall_;
 	bool is_start_;
 	bool is_end_;
-	bool is_explored_;
+	bool is_seen_;
 	bool is_frontier_;
 	bool is_path_;
 };
@@ -36,10 +36,10 @@ private:
 
 
 Node::Node(int x, int y, int w_size)
-	:rect_{ sf::RectangleShape() }, is_wall_{ false }, is_start_{ false }, is_end_{false}, is_explored_{false}, is_frontier_{false}, is_path_{false}
+	:rect_{ sf::RectangleShape() }, is_wall_{ false }, is_start_{ false }, is_end_{false}, is_seen_{false}, is_frontier_{false}, is_path_{false}
 {
 	rect_.setPosition(x, y);
-	rect_.setSize(sf::Vector2f(w_size / 3, w_size / 3)); //Grid is 3x3
+	rect_.setSize(sf::Vector2f(w_size / 20, w_size / 20)); //Grid is 20x20?
 	rect_.setFillColor(sf::Color::White); //set Nodes to white
 	rect_.setOutlineColor(sf::Color::Black);
 	rect_.setOutlineThickness(1);
@@ -69,9 +69,9 @@ void Node::setEnd()
 	is_end_ = true;
 }
 
-void Node::setExplored()
+void Node::setSeen()
 {
-	is_explored_ = true;
+	is_seen_ = true;
 	rect_.setFillColor(sf::Color::Cyan);
 	
 }
@@ -93,7 +93,7 @@ void Node::reset()
 	is_wall_ = false;
 	is_start_ = false;
 	is_end_ = false;
-	is_explored_ = false;
+	is_seen_ = false;
 	is_frontier_ = false;
 	is_path_ = false;
 }

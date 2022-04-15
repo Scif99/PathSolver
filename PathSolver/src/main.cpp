@@ -18,6 +18,8 @@ int main()
     Graph graph(dim);
     graph.fill(w_size);
 
+
+
     //Game Loop
     while (window.isOpen())
     {
@@ -28,7 +30,7 @@ int main()
             if (sf::Mouse::getPosition(window).x >=0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size)
             {
                 auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
-                auto& curr_node = graph[row_no*dim  + col_no]; //Cell (x,y) can be written as y*row_size + x. Don't want a copy
+                auto& curr_node = graph[row_no*dim  + col_no]; //Node (x,y) can be indexed as y*row_size + x. Don't want a copy
 
                 if(!curr_node.isStart()) curr_node.setWall(); //User cannot place walls on starting location
 
@@ -63,7 +65,7 @@ int main()
                         if (sf::Mouse::getPosition(window).x >= 0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size) //Clamp...
                         {
                             auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
-                            auto& curr_node = graph[row_no * dim + col_no]; //Cell (x,y) can be written as y*row_size + x. Don't want a copy
+                            auto& curr_node = graph[row_no * dim + col_no]; //Node (x,y) can be indexed as y*row_size + x. Don't want a copy
 
                             for (int i = 0; i < graph.size();++i) //Reset the previous starting cell
                             {
@@ -80,7 +82,7 @@ int main()
                             if (sf::Mouse::getPosition(window).x >= 0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size) //Clamp...
                             {
                                 auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
-                                auto& curr_node = graph[row_no*dim + col_no]; //Cell (x,y) can be written as y*row_size + x. Don't want a copy
+                                auto& curr_node = graph[row_no*dim + col_no]; //Node (x,y) can be indexed as y*row_size + x. Don't want a copy
 
                                 for (int i = 0; i < graph.size();++i) //Reset the previous starting cell
                                 {
@@ -99,10 +101,10 @@ int main()
                         if (graph.has_end() && graph.has_start())
                         {
                             std::unordered_map<int, int> parents = bfs(graph);
-                            draw_path(parents, graph);
+                            //draw_path(parents, graph);
 
                             auto t2 = std::chrono::high_resolution_clock::now(); //time after
-                            auto sec = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1); /* Getting number of milliseconds as an integer. */
+                            auto sec = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1); /* Getting number of seconds as an integer. */
 
                             std::cout << sec.count() << "s\n"; //Log time
                         }
