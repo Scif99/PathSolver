@@ -12,13 +12,10 @@ int main()
     int w_size = 800; //Size of the window
     sf::RenderWindow window(sf::VideoMode(w_size, w_size), "Path Solver", sf::Style::Titlebar | sf::Style::Close); //Construct window
 
-    //Create the grid
-    int dim = 20; //dimensions of grid
-
+    //Setup the grid
+    int dim = 20; 
     Graph graph(dim);
     graph.fill(w_size);
-
-
 
     //Game Loop
     while (window.isOpen())

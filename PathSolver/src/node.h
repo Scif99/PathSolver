@@ -82,8 +82,11 @@ void Node::setFrontier()
 
 void Node::setPath()
 {
-	is_path_ = true;
-	rect_.setFillColor(sf::Color::Yellow);
+	if (!is_start_ && !is_end_)
+	{
+		is_path_ = true;
+		rect_.setFillColor(sf::Color::Yellow);
+	}
 }
 
 void Node::reset()

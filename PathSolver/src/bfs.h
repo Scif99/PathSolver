@@ -54,29 +54,16 @@ void draw_path(std::unordered_map<int, int>& parents, Graph& graph)
 {
 	int start = graph.get_start();
 	int end = graph.get_end();
+	
 	//Check if a path exists
-	bool path_exists = false;
-	for(const auto& p : parents)
-	{
-		if (p.first == end)
-		{
-			path_exists = true;
-			std::cout << "Path found...\n";
-			break;
-			
-		}
-
-	}
-
-	if(!path_exists)
+	auto has_end = [&](std::pair<int, int> p) {return p.first == end; }; //Lambda to check if the end node is contained
+	if (std::find_if(parents.begin(), parents.end(), has_end) == parents.end())
 	{
 		std::cout << "No path exists\n";
-		graph[start].setStart(); //Re-color the star
 		return;
 	}
 
 	int curr = end;
-	graph[curr].setEnd(); //Re-color the end
 	int dist = 0;
 
 	while (parents[curr]>=0)
@@ -85,9 +72,9 @@ void draw_path(std::unordered_map<int, int>& parents, Graph& graph)
 		graph[p].setPath();
 		curr = p;
 		++dist;
-		std::cout << "dist: " << dist << '\n';
 	}
-	graph[start].setStart(); //Re-color the star
+	std::cout << "Path found with distance = " << dist << '\n';
+	graph[end].setEnd(); //Re-color the end
 	return;
 }
 
