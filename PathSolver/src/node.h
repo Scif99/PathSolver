@@ -1,23 +1,24 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+
+
+
 class Node : sf::RectangleShape {
 public:
 
-	Node(int x, int y, int w_size); //Constructor takes an x position, y position and the size of the window
+	Node(float x, float y, float w_size); //Constructor takes an x position, y position and the size of the window
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const; //The draw function is inherited from the sf::Drawable class
 	void setWall();
 	void setStart();
 	void setEnd();
 	void setSeen();
-	void setFrontier();
 	void setPath();
 	void reset();
 
 	bool isStart() const { return is_start_; }
 	bool isEnd() const { return is_end_; }
 	bool isSeen() const { return is_seen_; }
-	bool isFrontier() const { return is_frontier_; }
 	bool isPath() const { return is_path_; }
 	bool isWall() const { return is_wall_; }
 
@@ -28,15 +29,23 @@ private:
 	bool is_start_;
 	bool is_end_;
 	bool is_seen_;
-	bool is_frontier_;
 	bool is_path_;
+	enum class Type
+	{
+		empty_,
+		wall_,
+		start_,
+		end_,
+		seen_,
+		path_,
+	};
 };
 
 
 
 
-Node::Node(int x, int y, int w_size)
-	:rect_{ sf::RectangleShape() }, is_wall_{ false }, is_start_{ false }, is_end_{false}, is_seen_{false}, is_frontier_{false}, is_path_{false}
+Node::Node(float x, float y, float w_size)
+	:rect_{ sf::RectangleShape() }, is_wall_{ false }, is_start_{ false }, is_end_{false}, is_seen_{false}, is_path_{false}
 {
 	rect_.setPosition(x, y);
 	rect_.setSize(sf::Vector2f(w_size / 20, w_size / 20)); //Grid is 20x20?
@@ -58,6 +67,7 @@ void Node::setStart()
 
 void Node::setWall()
 {
+
 	rect_.setFillColor(sf::Color::Black);
 	is_wall_ = true;
 }
@@ -71,14 +81,9 @@ void Node::setEnd()
 void Node::setSeen()
 {
 	is_seen_ = true;
-	rect_.setFillColor(sf::Color::Cyan);
-	
+	rect_.setFillColor(sf::Color::Cyan);	
 }
-void Node::setFrontier()
-{
-	is_frontier_ = true;
-	rect_.setFillColor(sf::Color::Magenta);
-}
+
 
 void Node::setPath()
 {
@@ -96,7 +101,6 @@ void Node::reset()
 	is_start_ = false;
 	is_end_ = false;
 	is_seen_ = false;
-	is_frontier_ = false;
 	is_path_ = false;
 }
 

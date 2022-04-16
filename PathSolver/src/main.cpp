@@ -9,7 +9,7 @@
 
 int main()
 {
-    int w_size = 800; //Size of the window
+    constexpr int w_size{ 800 }; //Size of the window
     sf::RenderWindow window(sf::VideoMode(w_size, w_size), "Path Solver", sf::Style::Titlebar | sf::Style::Close); //Construct window
 
     //Setup the grid

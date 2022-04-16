@@ -11,7 +11,7 @@ public:
 
 	int dim() const { return dim_; }
 	int size() const { return v_nodes_.size(); }
-	void fill(int w_size);
+	void fill(float w_size);
 	std::vector<int> get_neighbours(int index);
 
 	//Accessors
@@ -37,14 +37,15 @@ Graph::Graph(int dim)
 	:dim_{ dim }, v_nodes_{ {} }
 {}
 
-void Graph::fill(int w_size) //Fill the graph up with nodes
+//Fill the graph up with nodes
+void Graph::fill(float w_size) 
 {
 	//Fill the grid
 	for (int i = 0; i < dim_; ++i) //Row 
 	{
 		for (int j = 0;j < dim_;++j) //Column
 		{
-			int units = w_size / dim_;
+			float units = w_size / dim_;
 			v_nodes_.push_back(Node{ j * units, i * units, w_size });//The Nodes are stored in row-major order ----->
 		}
 
