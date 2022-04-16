@@ -95,6 +95,47 @@ void draw_path(std::unordered_map<int, int>& parents, Graph& graph)
 
 
 
-
+//void bfs_step(Graph& graph) //Returns a map containing the parents of each cell
+//{
+//	std::unordered_map<int, int> parents;
+//	std::unordered_map<int, int> distance;
+//
+//	int start = graph.get_start();
+//	parents[start] = -1;
+//	distance[start] = 0;
+//
+//	std::queue<int> frontier; //Queue containts the indices of the cells being explored
+//	frontier.push(start);
+//
+//
+//	graph[start].setSeen();
+//	//Assert: frontier contains ...
+//
+//	while (!frontier.empty())
+//	{
+//		int curr = frontier.front();
+//		frontier.pop();
+//
+//		if (graph[curr].isEnd())
+//		{
+//			color_frontier(frontier, graph); //Color elements that were in the frontier separately
+//			return parents; //Early stop 
+//		}
+//
+//		for (int i : graph.get_neighbours(curr))
+//		{
+//			if (!graph[i].isSeen() && !graph[i].isWall()) //Don't add walls to the frontier
+//			{
+//				parents[i] = curr;
+//				distance[i] = distance[curr] + 1;
+//				frontier.push(i);
+//				graph[i].setSeen(); //Each node should ol
+//			}
+//		}
+//
+//	}
+//	return parents;
+//
+//}
 
 
