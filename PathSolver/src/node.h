@@ -29,15 +29,11 @@ public:
 	void setVisited();
 	void reset();
 
-	//void setType(Type t) { type_ = t; }
-
 	bool isStart() const { return type_ == Type::start_; }
 	bool isEnd() const { return type_ == Type::end_; }
 	bool isPath() const { return type_ == Type::path_; }
 	bool isWall() const { return type_ == Type::wall_; }
-	bool isSeen() const { return is_seen_; }
-
-	//bool isType(Type t) { return type_ == t; }
+	bool isSeen() const { return is_seen_; } //Note that a node can be seen but also contain a Type
 
 
 };
@@ -88,7 +84,7 @@ void Node::setVisited()
 
 void Node::setPath()
 {
-	rect_.setFillColor(sf::Color::Yellow);
+	if (type_ != Type::start_ && type_ != Type::end_) { rect_.setFillColor(sf::Color::Yellow); } //Only change color if node isn't start or end
 	type_ = Type::path_;
 }
 

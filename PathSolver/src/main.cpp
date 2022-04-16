@@ -5,6 +5,15 @@
 #include "utility.h"
 #include "bfs.h"
 
+void reset(Graph& g)
+{
+    for (int i = 0; i < g.size(); ++i)
+    {
+        g[i].reset();
+    }
+    g.clear(); //Clear all data from last search
+
+}
 
 
 int main()
@@ -42,11 +51,8 @@ int main()
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) //Press R to reset the grid
         {
-            for (int i = 0; i < graph.size();++i)
-            {
-                graph[i].reset();
-            }
-            graph.clear(); //Clear all data from last search
+            reset(graph);
+            done = false;
         }
 
         //Process Events    
@@ -77,11 +83,13 @@ int main()
 
                             curr_node.setStart();
 
-                            //Reset the frontier 
-                            while (!graph.frontier.empty()) { graph.frontier.pop(); }
+                            //Reset the data  
+                            graph.clear();
                             graph.frontier.push(row_no * dim + col_no);
-                            std::cout << "front is now " << graph.frontier.front() << '\n';
-                            std::cout << "Placed start at " << row_no * dim + col_no << '\n';
+                            graph.parents[row_no * dim + col_no] = -1;
+                            graph.distance[row_no * dim + col_no] = 0;
+
+
                         }
                     }
 
@@ -103,15 +111,18 @@ int main()
 
                     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) //User can press Space to run the BFS
                     {
+                        if (done)
+                        {
+                            std::cout << "press R to reset\n";
+                        }
                         if (graph.has_start() && graph.has_end() && !done)
                         {     
 
                             int next = bfs_step(graph);
-                            if (next == graph.get_end())
+                            if (next ==-1)
                             {
-                                std::cout << "bfs found end\n";
-                                draw_path(graph);
                                 done = true;
+                                draw_path(graph);
                             }
 
                         }
