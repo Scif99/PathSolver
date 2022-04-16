@@ -8,6 +8,15 @@
 #include "Graph.h"
 #include "utility.h"
 
+void color_frontier(std::queue<int>& f, Graph& g)
+{
+	while (!f.empty())
+	{
+		int curr = f.front();
+		f.pop();
+		g[curr].setFrontier();	
+	}
+}
 
 
 std::unordered_map<int, int> bfs(Graph& graph) //Returns a map containing the parents of each cell
@@ -31,7 +40,11 @@ std::unordered_map<int, int> bfs(Graph& graph) //Returns a map containing the pa
 		int curr = frontier.front();
 		frontier.pop();
 
-		if (graph[curr].isEnd()) return parents; //Early stop 
+		if (graph[curr].isEnd())
+		{
+			color_frontier(frontier,graph); //Color elements that were in the frontier separately
+			return parents; //Early stop 
+		}
 
 		for (int i : graph.get_neighbours(curr))
 		{
@@ -40,7 +53,6 @@ std::unordered_map<int, int> bfs(Graph& graph) //Returns a map containing the pa
 				parents[i] = curr;
 				distance[i] = distance[curr] + 1;
 				frontier.push(i);
-				//graph[i].setFrontier();
 				graph[i].setSeen(); //Each node should ol
 			}
 		}
@@ -54,6 +66,7 @@ void draw_path(std::unordered_map<int, int>& parents, Graph& graph)
 {
 	int start = graph.get_start();
 	int end = graph.get_end();
+
 	
 	//Check if a path exists
 	auto has_end = [&](std::pair<int, int> p) {return p.first == end; }; //Lambda to check if the end node is contained
@@ -74,9 +87,15 @@ void draw_path(std::unordered_map<int, int>& parents, Graph& graph)
 		++dist;
 	}
 	std::cout << "Path found with distance = " << dist << '\n';
-	graph[end].setEnd(); //Re-color the end
-	graph[start].setStart();
+	graph[end].setEnd(); //Re-color
+	graph[start].setStart(); //Re-color
+
 	return;
 }
+
+
+
+
+
 
 
