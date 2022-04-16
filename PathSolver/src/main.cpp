@@ -104,7 +104,6 @@ int main()
                                 {
                                     if (graph[i].isEnd()) graph[i].reset();
                                 }
-                                std::cout << "Placed end at " << row_no * dim + col_no << '\n';
                                 curr_node.setEnd();
                             }
                     }
@@ -124,6 +123,8 @@ int main()
                                 done = true;
                                 draw_path(graph);
                             }
+                            //bfs_full(graph);
+                            //draw_path(graph);
 
                         }
                         else std::cout << "Please place a start and end location before searching\n";

@@ -5,7 +5,7 @@ class Node : sf::RectangleShape {
 
 private:
 	sf::RectangleShape rect_;
-	bool is_seen_;
+	bool seen_;
 	enum class Type
 	{
 		empty_,
@@ -33,13 +33,13 @@ public:
 	bool isEnd() const { return type_ == Type::end_; }
 	bool isPath() const { return type_ == Type::path_; }
 	bool isWall() const { return type_ == Type::wall_; }
-	bool isSeen() const { return is_seen_; } //Note that a node can be seen but also contain a Type
+	bool isSeen() const { return seen_; } 
 
 
 };
 
 Node::Node(float x, float y, float w_size, int dim)
-	:rect_{ sf::RectangleShape() }, type_{ Type::empty_ }, is_seen_{ false }
+	:rect_{ sf::RectangleShape() }, type_{ Type::empty_ }, seen_{ false }
 {
 	rect_.setPosition(x, y);
 	rect_.setSize(sf::Vector2f(w_size / dim, w_size / dim)); //Grid is 20x20?
@@ -74,7 +74,7 @@ void Node::setEnd()
 void Node::setSeen()
 {
 	if (type_ != Type::start_ && type_ != Type::end_) { rect_.setFillColor(sf::Color::Cyan); } //Only change color if node isn't start or end
-	is_seen_ = true;
+	seen_ = true;
 }
 
 void Node::setVisited()
@@ -94,7 +94,7 @@ void Node::reset()
 {
 	rect_.setFillColor(sf::Color::White);
 	type_ = Type::empty_;
-	is_seen_ = false;
+	seen_ = false;
 }
 
 

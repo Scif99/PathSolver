@@ -9,87 +9,47 @@
 #include "utility.h"
 
 
-//std::unordered_map<int, int> bfs(Graph& graph) //Returns a map containing the parents of each cell
-//{
-//	std::unordered_map<int, int> parents;
-//	std::unordered_map<int, int> distance; 
-//
-//	int start = graph.get_start();
-//	parents[start] = -1;
-//	distance[start] = 0;
-//
-//	std::queue<int> frontier; //Queue containts the indices of the cells being explored
-//	frontier.push(start);
-//
-//
-//	graph[start].setSeen();
-//	//Assert: frontier contains ...
-//
-//	while (!frontier.empty())
-//	{
-//		int curr = frontier.front();
-//		frontier.pop();
-//
-//		if (graph[curr].isEnd())
-//		{
-//			color_frontier(frontier,graph); //Color elements that were in the frontier separately
-//			return parents; //Early stop 
-//		}
-//
-//		for (int i : graph.get_neighbours(curr))
-//		{
-//			if (!graph[i].isSeen() && !graph[i].isWall()) //Don't add walls to the frontier
-//			{
-//				parents[i] = curr;
-//				distance[i] = distance[curr] + 1;
-//				frontier.push(i);
-//				graph[i].setSeen(); //Each node should ol
-//			}
-//		}
-//
-//	}
-//	return parents;
-//
-//}
-
-void draw_path(Graph& graph)
+void bfs_full(Graph& graph) //Returns a map containing the parents of each cell
 {
 
-	int start = graph.get_start();
-	int end = graph.get_end();
+	//Note initialisation is done when user places a start node.
+	//This is so that the bfs_step function can run properly
+	//Yes this is bad design
 
-	
-	//Check if a path exists
-	auto has_end = [&](std::pair<int, int> p) {return p.first == end; }; //Lambda to check if the end node is contained
-	if (std::find_if(graph.parents.begin(), graph.parents.end(), has_end) == graph.parents.end())
+	graph[graph.get_start()].setSeen();
+
+	while (!graph.frontier.empty())
 	{
-		std::cout << "No path exists\n";
-		return;
-	}
 
-	int curr = end;
-	int dist = 0;
+		int curr = graph.frontier.front();
+		graph.frontier.pop();
+		graph[curr].setVisited(); 
 
-	while (graph.parents[curr]>=0)
-	{
-		int p = graph.parents[curr];
-		graph[p].setPath();
-		curr = p;
-		++dist;
+		if (graph[curr].isEnd()) return; //Early stop 
+		
+
+		for (int i : graph.get_neighbours(curr))
+		{
+			if (!graph[i].isSeen() && !graph[i].isWall()) //Don't add walls to the frontier
+			{
+				graph.parents[i] = curr;
+				graph.distance[i] = graph.distance[curr] + 1;
+				graph.frontier.push(i);
+				graph[i].setSeen(); //Each node should only be processed once
+			}
+		}
+
 	}
-	std::cout << "Path found with manhatten distance = " << dist << '\n';
-	graph[start].setStart(); //Re-color
-	graph[end].setEnd(); //Re-color
+	return;
+
 }
+
 
 //On each iteration, the frontier will be printed
 //Returns the index of the node that is next in the queue after the current one
 
 int bfs_step(Graph& graph)
 {
-
-
-
 	if (graph.frontier.empty()) return -1; //If the frontier is empty then we know a path cannot exist, but this case explicitely handled by the draw_path function
 
 
@@ -121,4 +81,32 @@ int bfs_step(Graph& graph)
 	return graph.frontier.front(); //Return index of the node that is now at the fron of the queue
 }
 
+
+void draw_path(Graph& graph)
+{
+	int start = graph.get_start();
+	int end = graph.get_end();
+
+	//Check if a path exists
+	auto has_end = [&](std::pair<int, int> p) {return p.first == end; }; //Lambda to check if the end node is contained
+	if (std::find_if(graph.parents.begin(), graph.parents.end(), has_end) == graph.parents.end())
+	{
+		std::cout << "No path exists\n";
+		return;
+	}
+
+	int curr = end;
+	int dist = 0;
+
+	while (graph.parents[curr] >= 0)
+	{
+		int p = graph.parents[curr];
+		graph[p].setPath();
+		curr = p;
+		++dist;
+	}
+	std::cout << "Path found with manhatten distance = " << dist << '\n';
+	graph[start].setStart(); //Re-color
+	graph[end].setEnd(); //Re-color
+}
 
