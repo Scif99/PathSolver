@@ -86,56 +86,47 @@ void draw_path(std::unordered_map<int, int>& parents, Graph& graph)
 		curr = p;
 		++dist;
 	}
-	std::cout << "Path found with distance = " << dist << '\n';
+	std::cout << "Path found with manhatten distance = " << dist << '\n';
 	graph[start].setStart(); //Re-color
 	graph[end].setEnd(); //Re-color
+
 	return;
 }
 
 
 
+void bfs_step(Graph& graph, std::queue<int>& frontier) //Returns a map containing the parents of each cell
+{
+	//initialization case?
+	// 
+	//int start = graph.get_start();
+	//graph.parents[start] = -1;
+	//graph.distance[start] = 0;
 
-//void bfs_step(Graph& graph) //Returns a map containing the parents of each cell
-//{
-//	std::unordered_map<int, int> parents;
-//	std::unordered_map<int, int> distance;
-//
-//	int start = graph.get_start();
-//	parents[start] = -1;
-//	distance[start] = 0;
-//
-//	std::queue<int> frontier; //Queue containts the indices of the cells being explored
-//	frontier.push(start);
-//
-//
-//	graph[start].setSeen();
-//	//Assert: frontier contains ...
-//
-//	while (!frontier.empty())
-//	{
-//		int curr = frontier.front();
-//		frontier.pop();
-//
-//		if (graph[curr].isEnd())
-//		{
-//			color_frontier(frontier, graph); //Color elements that were in the frontier separately
-//			return parents; //Early stop 
-//		}
-//
-//		for (int i : graph.get_neighbours(curr))
-//		{
-//			if (!graph[i].isSeen() && !graph[i].isWall()) //Don't add walls to the frontier
-//			{
-//				parents[i] = curr;
-//				distance[i] = distance[curr] + 1;
-//				frontier.push(i);
-//				graph[i].setSeen(); //Each node should ol
-//			}
-//		}
-//
-//	}
-//	return parents;
-//
-//}
+	//frontier.push(start);
+
+	int curr = frontier.front();
+	graph[curr].setSeen();
+	//Assert: frontier contains ...
+
+	if (graph[curr].isEnd())
+	{
+		color_frontier(frontier, graph); //Color elements that were in the frontier separately
+		return;
+	}
+
+	if (frontier.empty()) return;
+
+	for (int i : graph.get_neighbours(curr))
+	{
+		if (!graph[i].isSeen() && !graph[i].isWall()) //Don't add walls to the frontier
+		{
+			graph.parents[i] = curr;
+			graph.distance[i] = graph.distance[curr] + 1;
+			frontier.push(i);
+			graph[i].setFrontier(); //Each node should ol
+		}
+	}
+}
 
 

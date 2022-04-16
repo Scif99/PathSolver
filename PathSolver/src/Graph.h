@@ -24,12 +24,13 @@ public:
 	int get_end();
 	bool has_end();
 
+	std::unordered_map<int, int> parents;
+	std::unordered_map<int, int> distance;
 	
 private:
 	int dim_;
 	std::vector<Node> v_nodes_;
-	//std::unordered_map<int, int> parent_;
-	//std::unordered_map<int, int> distance_;
+
 };
 
 
