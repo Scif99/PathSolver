@@ -25,7 +25,7 @@ int main()
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) //User can use left click to place walls
         {
-            if (done)
+            if (done) //If user clicks after a search, automatically reset the board
             {
                 for (int i = 0; i < graph.size(); ++i) { graph[i].reset(); }
                 done = false;

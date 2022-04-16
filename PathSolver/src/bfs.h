@@ -8,6 +8,15 @@
 #include "Graph.h"
 #include "utility.h"
 
+void color_frontier(std::queue<int>& f, Graph& g)
+{
+	while (!f.empty())
+	{
+		int curr = f.front();
+		f.pop();
+		g[curr].setFrontier();	
+	}
+}
 
 
 std::unordered_map<int, int> bfs(Graph& graph) //Returns a map containing the parents of each cell
@@ -31,7 +40,11 @@ std::unordered_map<int, int> bfs(Graph& graph) //Returns a map containing the pa
 		int curr = frontier.front();
 		frontier.pop();
 
-		if (graph[curr].isEnd()) return parents; //Early stop 
+		if (graph[curr].isEnd())
+		{
+			color_frontier(frontier,graph); //Color elements that were in the frontier separately
+			return parents; //Early stop 
+		}
 
 		for (int i : graph.get_neighbours(curr))
 		{

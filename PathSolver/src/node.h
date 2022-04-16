@@ -14,6 +14,7 @@ public:
 	void setEnd();
 	void setSeen();
 	void setPath();
+	void setFrontier();
 	void reset();
 
 	bool isStart() const { return type_== Type::start_; }
@@ -29,6 +30,7 @@ public:
 		start_,
 		end_,
 		path_,
+		frontier_,
 	};
 	
 private:
@@ -83,6 +85,12 @@ void Node::setPath()
 {
 	rect_.setFillColor(sf::Color::Yellow);
 	type_ = Type::path_;
+}
+
+void Node::setFrontier()
+{
+	rect_.setFillColor(sf::Color::Magenta);
+	type_ = Type::frontier_;
 }
 
 void Node::reset()
