@@ -5,25 +5,6 @@
 
 
 class Node : sf::RectangleShape {
-public:
-
-	Node(float x, float y, float w_size, int dim); //Constructor takes an x position, y position and the size of the window
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override; //The draw function is inherited from the sf::Drawable class
-	void setWall();
-	void setStart();
-	void setEnd();
-	void setSeen();
-	void setPath();
-	void setFrontier();
-	void reset();
-
-	bool isStart() const { return type_ == Type::start_; }
-	bool isEnd() const { return type_ == Type::end_; }
-	bool isPath() const { return type_ == Type::path_; }
-	bool isWall() const { return type_ == Type::wall_; }
-	bool isSeen() const { return is_seen_; }
-
-
 
 private:
 	sf::RectangleShape rect_;
@@ -38,6 +19,30 @@ private:
 		frontier_,
 	};
 	Type type_;
+
+public:
+
+	Node(float x, float y, float w_size, int dim); //Constructor takes an x position, y position and the size of the window
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override; //The draw function is inherited from the sf::Drawable class
+	void setWall();
+	void setStart();
+	void setEnd();
+	void setSeen();
+	void setPath();
+	void setFrontier();
+	void reset();
+
+	//void setType(Type t) { type_ = t; }
+
+	bool isStart() const { return type_ == Type::start_; }
+	bool isEnd() const { return type_ == Type::end_; }
+	bool isPath() const { return type_ == Type::path_; }
+	bool isWall() const { return type_ == Type::wall_; }
+	bool isSeen() const { return is_seen_; }
+
+	bool isType(Type t) { return type_ == t; }
+
+
 };
 
 Node::Node(float x, float y, float w_size, int dim)

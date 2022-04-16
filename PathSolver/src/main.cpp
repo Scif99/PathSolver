@@ -13,7 +13,7 @@ int main()
     sf::RenderWindow window(sf::VideoMode(w_size, w_size), "Path Solver", sf::Style::Titlebar | sf::Style::Close); //Construct window
 
     //Setup the grid
-    constexpr int dim = 20; 
+    constexpr int dim{ 20 };
     Graph graph(dim);
     graph.fill(w_size);
 
