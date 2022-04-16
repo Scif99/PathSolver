@@ -17,12 +17,17 @@ public:
 	void setFrontier();
 	void reset();
 
-	bool isStart() const { return type_== Type::start_; }
-	bool isEnd() const { return type_==Type::end_; }
+	bool isStart() const { return type_ == Type::start_; }
+	bool isEnd() const { return type_ == Type::end_; }
 	bool isPath() const { return type_ == Type::path_; }
 	bool isWall() const { return type_ == Type::wall_; }
 	bool isSeen() const { return is_seen_; }
 
+
+
+private:
+	sf::RectangleShape rect_;
+	bool is_seen_;
 	enum class Type
 	{
 		empty_,
@@ -32,15 +37,8 @@ public:
 		path_,
 		frontier_,
 	};
-	
-private:
-	sf::RectangleShape rect_;
 	Type type_;
-	bool is_seen_;
 };
-
-
-
 
 Node::Node(float x, float y, float w_size, int dim)
 	:rect_{ sf::RectangleShape() }, type_{ Type::empty_ }, is_seen_{ false }

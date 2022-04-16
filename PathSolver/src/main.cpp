@@ -108,13 +108,12 @@ int main()
                     break;
                 }
 
-
             }
 
         }
 
         //Draw
-        window.clear(); //Clear Screen so contents from previous frame isnt 
+        window.clear(); //Clear Screen so contents from previous frame doesn't interfere with current frame
         for (int i = 0; i < graph.size();++i) graph[i].draw(window, sf::RenderStates::Default);
         window.display(); //Swap buffers and display on screen
     }
