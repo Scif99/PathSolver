@@ -75,6 +75,7 @@ void draw_path(std::unordered_map<int, int>& parents, Graph& graph)
 	}
 	std::cout << "Path found with distance = " << dist << '\n';
 	graph[end].setEnd(); //Re-color the end
+	graph[start].setStart();
 	return;
 }
 
