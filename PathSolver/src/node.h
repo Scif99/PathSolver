@@ -13,7 +13,7 @@ private:
 		start_,
 		end_,
 		path_,
-		frontier_,
+		visited_,
 	};
 	Type type_;
 
@@ -26,11 +26,10 @@ public:
 	void setEnd();
 	void setSeen();
 	void setPath();
-	void setFrontier();
+	void setVisited();
 	void reset();
 
 	//void setType(Type t) { type_ = t; }
-	void visit();
 
 	bool isStart() const { return type_ == Type::start_; }
 	bool isEnd() const { return type_ == Type::end_; }
@@ -78,8 +77,13 @@ void Node::setEnd()
 
 void Node::setSeen()
 {
-	rect_.setFillColor(sf::Color::Cyan);	
+	if (type_ != Type::start_ && type_ != Type::end_) { rect_.setFillColor(sf::Color::Cyan); } //Only change color if node isn't start or end
 	is_seen_ = true;
+}
+
+void Node::setVisited()
+{
+	if (type_ != Type::start_ && type_ != Type::end_) rect_.setFillColor(sf::Color::Magenta);  //Only change color if node isn't start or end
 }
 
 void Node::setPath()
@@ -88,11 +92,7 @@ void Node::setPath()
 	type_ = Type::path_;
 }
 
-void Node::setFrontier()
-{
-	rect_.setFillColor(sf::Color::Magenta);
-	type_ = Type::frontier_;
-}
+
 
 void Node::reset()
 {
@@ -101,8 +101,5 @@ void Node::reset()
 	is_seen_ = false;
 }
 
-void Node::visit()
-{
-	rect_.setFillColor(sf::Color::Green);
-}
+
 

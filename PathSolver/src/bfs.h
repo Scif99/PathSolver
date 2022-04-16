@@ -14,7 +14,7 @@ void color_frontier(Graph& g)
 	{
 		int curr = g.frontier.front();
 		g.frontier.pop();
-		g[curr].setFrontier();	
+		g[curr].setSeen();	
 	}
 }
 
@@ -110,20 +110,22 @@ int bfs_step(Graph& graph) //Returns a map containing the parents of each cell
 	{
 		color_frontier(graph); //Color elements that were in the frontier separately
 		return curr; //Return this end index
+		std::cout << "END FOUND\n";
 	}
 
-	graph[curr].setSeen();
-	graph[curr].visit();
+	if (graph[curr].isStart()) graph[curr].setSeen();	
+	graph[curr].setVisited();
 	//Assert: frontier contains ...
 
 	for (int i : graph.get_neighbours(curr))
 	{
-		if (!graph[i].isSeen() && !graph[i].isWall()) //Don't add walls to the frontier
+		if (!graph[i].isSeen() && !graph[i].isWall()) //Each node should only be in the queue at most once. Don't add walls to the frontier
 		{
 			graph.parents[i] = curr;
 			graph.distance[i] = graph.distance[curr] + 1;
 			graph.frontier.push(i);
-			graph[i].setSeen(); //Each node should ol
+			graph[i].setSeen(); 
+
 		}
 	}
 

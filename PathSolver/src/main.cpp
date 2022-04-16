@@ -77,8 +77,8 @@ int main()
 
                             curr_node.setStart();
 
-                            //Change 
-                            graph.frontier.pop();
+                            //Reset the frontier 
+                            while (!graph.frontier.empty()) { graph.frontier.pop(); }
                             graph.frontier.push(row_no * dim + col_no);
                             std::cout << "front is now " << graph.frontier.front() << '\n';
                             std::cout << "Placed start at " << row_no * dim + col_no << '\n';
@@ -109,6 +109,7 @@ int main()
                             int next = bfs_step(graph);
                             if (next == graph.get_end())
                             {
+                                std::cout << "bfs found end\n";
                                 draw_path(graph);
                                 done = true;
                             }
@@ -116,7 +117,6 @@ int main()
                         }
                         else std::cout << "Please place a start and end location before searching\n";
                     }
-
                     break;
                 }
 
