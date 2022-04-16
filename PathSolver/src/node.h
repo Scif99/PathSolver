@@ -7,8 +7,8 @@
 class Node : sf::RectangleShape {
 public:
 
-	Node(float x, float y, float w_size); //Constructor takes an x position, y position and the size of the window
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const; //The draw function is inherited from the sf::Drawable class
+	Node(float x, float y, float w_size, int dim); //Constructor takes an x position, y position and the size of the window
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override; //The draw function is inherited from the sf::Drawable class
 	void setWall();
 	void setStart();
 	void setEnd();
@@ -18,33 +18,33 @@ public:
 
 	bool isStart() const { return type_== Type::start_; }
 	bool isEnd() const { return type_==Type::end_; }
-	bool isSeen() const { return type_ == Type::seen_; }
 	bool isPath() const { return type_ == Type::path_; }
 	bool isWall() const { return type_ == Type::wall_; }
+	bool isSeen() const { return is_seen_; }
 
-	
-private:
-	sf::RectangleShape rect_;
 	enum class Type
 	{
 		empty_,
 		wall_,
 		start_,
 		end_,
-		seen_,
 		path_,
 	};
+	
+private:
+	sf::RectangleShape rect_;
 	Type type_;
+	bool is_seen_;
 };
 
 
 
 
-Node::Node(float x, float y, float w_size)
-	:rect_{ sf::RectangleShape() }, type_{Type::empty_}
+Node::Node(float x, float y, float w_size, int dim)
+	:rect_{ sf::RectangleShape() }, type_{ Type::empty_ }, is_seen_{ false }
 {
 	rect_.setPosition(x, y);
-	rect_.setSize(sf::Vector2f(w_size / 20, w_size / 20)); //Grid is 20x20?
+	rect_.setSize(sf::Vector2f(w_size / dim, w_size / dim)); //Grid is 20x20?
 	rect_.setFillColor(sf::Color::White); //set Nodes to white
 	rect_.setOutlineColor(sf::Color::Black);
 	rect_.setOutlineThickness(1);
@@ -63,7 +63,6 @@ void Node::setStart()
 
 void Node::setWall()
 {
-
 	rect_.setFillColor(sf::Color::Black);
 	type_ = Type::wall_;
 }
@@ -77,20 +76,20 @@ void Node::setEnd()
 void Node::setSeen()
 {
 	rect_.setFillColor(sf::Color::Cyan);	
-	type_ = Type::seen_;
+	is_seen_ = true;
 }
-
 
 void Node::setPath()
 {
 	rect_.setFillColor(sf::Color::Yellow);
 	type_ = Type::path_;
-
 }
 
 void Node::reset()
 {
 	rect_.setFillColor(sf::Color::White);
-	type_ == Type::start_;
+	type_ = Type::empty_;
+	is_seen_ = false;
+
 }
 

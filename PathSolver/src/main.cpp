@@ -13,9 +13,11 @@ int main()
     sf::RenderWindow window(sf::VideoMode(w_size, w_size), "Path Solver", sf::Style::Titlebar | sf::Style::Close); //Construct window
 
     //Setup the grid
-    int dim = 20; 
+    constexpr int dim = 20; 
     Graph graph(dim);
     graph.fill(w_size);
+
+    bool done = false;
 
     //Game Loop
     while (window.isOpen())
@@ -23,13 +25,17 @@ int main()
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) //User can use left click to place walls
         {
-
+            if (done)
+            {
+                for (int i = 0; i < graph.size(); ++i) { graph[i].reset(); }
+                done = false;
+            }
             if (sf::Mouse::getPosition(window).x >=0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size)
             {
                 auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
                 auto& curr_node = graph[row_no*dim  + col_no]; //Node (x,y) can be indexed as y*row_size + x. Don't want a copy
 
-                if(!curr_node.isStart()) curr_node.setWall(); //User cannot place walls on starting location
+                curr_node.setWall(); //User cannot place walls on starting location
 
             }
         }
@@ -56,7 +62,6 @@ int main()
 
                 case sf::Event::KeyPressed:
                 {
-
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) //User can press 1 to change the start location to mouse position
                     {
                         if (sf::Mouse::getPosition(window).x >= 0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size) //Clamp...
@@ -68,7 +73,6 @@ int main()
                             {
                                 if (graph[i].isStart()) graph[i].reset();
                             }
-
                             curr_node.setStart();
                             std::cout << "Placed start at " << row_no * dim + col_no << '\n';
                         }
@@ -92,18 +96,11 @@ int main()
 
                     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) //User can press Space to run the BFS
                     {
-
-                        auto t1 = std::chrono::high_resolution_clock::now(); //time before
-
-                        if (graph.has_end() && graph.has_start())
+                        if (graph.has_start() && graph.has_end())
                         {
                             std::unordered_map<int, int> parents = bfs(graph);
                             draw_path(parents, graph);
-
-                            auto t2 = std::chrono::high_resolution_clock::now(); //time after
-                            auto sec = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1); /* Getting number of seconds as an integer. */
-
-                            std::cout << sec.count() << "s\n"; //Log time
+                            done = true;
                         }
                         else std::cout << "Please place a start and end location before searching\n";
                     }

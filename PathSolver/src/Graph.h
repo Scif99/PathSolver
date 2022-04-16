@@ -46,7 +46,7 @@ void Graph::fill(float w_size)
 		for (int j = 0;j < dim_;++j) //Column
 		{
 			float units = w_size / dim_;
-			v_nodes_.push_back(Node{ j * units, i * units, w_size });//The Nodes are stored in row-major order ----->
+			v_nodes_.push_back(Node{ j * units, i * units, w_size , dim_});//The Nodes are stored in row-major order ----->
 		}
 
 	}
