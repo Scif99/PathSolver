@@ -1,9 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-
-
-
 class Node : sf::RectangleShape {
 
 private:
@@ -33,6 +30,7 @@ public:
 	void reset();
 
 	//void setType(Type t) { type_ = t; }
+	void visit();
 
 	bool isStart() const { return type_ == Type::start_; }
 	bool isEnd() const { return type_ == Type::end_; }
@@ -40,7 +38,7 @@ public:
 	bool isWall() const { return type_ == Type::wall_; }
 	bool isSeen() const { return is_seen_; }
 
-	bool isType(Type t) { return type_ == t; }
+	//bool isType(Type t) { return type_ == t; }
 
 
 };
@@ -101,6 +99,10 @@ void Node::reset()
 	rect_.setFillColor(sf::Color::White);
 	type_ = Type::empty_;
 	is_seen_ = false;
+}
 
+void Node::visit()
+{
+	rect_.setFillColor(sf::Color::Green);
 }
 

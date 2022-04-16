@@ -8,61 +8,61 @@
 #include "Graph.h"
 #include "utility.h"
 
-void color_frontier(std::queue<int>& f, Graph& g)
+void color_frontier(Graph& g)
 {
-	while (!f.empty())
+	while (!g.frontier.empty())
 	{
-		int curr = f.front();
-		f.pop();
+		int curr = g.frontier.front();
+		g.frontier.pop();
 		g[curr].setFrontier();	
 	}
 }
 
 
-std::unordered_map<int, int> bfs(Graph& graph) //Returns a map containing the parents of each cell
-{
-	std::unordered_map<int, int> parents;
-	std::unordered_map<int, int> distance; 
+//std::unordered_map<int, int> bfs(Graph& graph) //Returns a map containing the parents of each cell
+//{
+//	std::unordered_map<int, int> parents;
+//	std::unordered_map<int, int> distance; 
+//
+//	int start = graph.get_start();
+//	parents[start] = -1;
+//	distance[start] = 0;
+//
+//	std::queue<int> frontier; //Queue containts the indices of the cells being explored
+//	frontier.push(start);
+//
+//
+//	graph[start].setSeen();
+//	//Assert: frontier contains ...
+//
+//	while (!frontier.empty())
+//	{
+//		int curr = frontier.front();
+//		frontier.pop();
+//
+//		if (graph[curr].isEnd())
+//		{
+//			color_frontier(frontier,graph); //Color elements that were in the frontier separately
+//			return parents; //Early stop 
+//		}
+//
+//		for (int i : graph.get_neighbours(curr))
+//		{
+//			if (!graph[i].isSeen() && !graph[i].isWall()) //Don't add walls to the frontier
+//			{
+//				parents[i] = curr;
+//				distance[i] = distance[curr] + 1;
+//				frontier.push(i);
+//				graph[i].setSeen(); //Each node should ol
+//			}
+//		}
+//
+//	}
+//	return parents;
+//
+//}
 
-	int start = graph.get_start();
-	parents[start] = -1;
-	distance[start] = 0;
-
-	std::queue<int> frontier; //Queue containts the indices of the cells being explored
-	frontier.push(start);
-
-
-	graph[start].setSeen();
-	//Assert: frontier contains ...
-
-	while (!frontier.empty())
-	{
-		int curr = frontier.front();
-		frontier.pop();
-
-		if (graph[curr].isEnd())
-		{
-			color_frontier(frontier,graph); //Color elements that were in the frontier separately
-			return parents; //Early stop 
-		}
-
-		for (int i : graph.get_neighbours(curr))
-		{
-			if (!graph[i].isSeen() && !graph[i].isWall()) //Don't add walls to the frontier
-			{
-				parents[i] = curr;
-				distance[i] = distance[curr] + 1;
-				frontier.push(i);
-				graph[i].setSeen(); //Each node should ol
-			}
-		}
-
-	}
-	return parents;
-
-}
-
-void draw_path(std::unordered_map<int, int>& parents, Graph& graph)
+void draw_path(Graph& graph)
 {
 	int start = graph.get_start();
 	int end = graph.get_end();
@@ -70,7 +70,7 @@ void draw_path(std::unordered_map<int, int>& parents, Graph& graph)
 	
 	//Check if a path exists
 	auto has_end = [&](std::pair<int, int> p) {return p.first == end; }; //Lambda to check if the end node is contained
-	if (std::find_if(parents.begin(), parents.end(), has_end) == parents.end())
+	if (std::find_if(graph.parents.begin(), graph.parents.end(), has_end) == graph.parents.end())
 	{
 		std::cout << "No path exists\n";
 		return;
@@ -79,9 +79,9 @@ void draw_path(std::unordered_map<int, int>& parents, Graph& graph)
 	int curr = end;
 	int dist = 0;
 
-	while (parents[curr]>=0)
+	while (graph.parents[curr]>=0)
 	{
-		int p = parents[curr];
+		int p = graph.parents[curr];
 		graph[p].setPath();
 		curr = p;
 		++dist;
@@ -93,29 +93,28 @@ void draw_path(std::unordered_map<int, int>& parents, Graph& graph)
 	return;
 }
 
+//On each iteration, the frontier will be printed
+//Returns the index of the node that is next in the queue after the current one
 
-
-void bfs_step(Graph& graph, std::queue<int>& frontier) //Returns a map containing the parents of each cell
+int bfs_step(Graph& graph) //Returns a map containing the parents of each cell
 {
-	//initialization case?
-	// 
-	//int start = graph.get_start();
-	//graph.parents[start] = -1;
-	//graph.distance[start] = 0;
 
-	//frontier.push(start);
+	//if (graph.frontier.empty()) return; //Can assume that there is always a start and end, hence the frontier should never be empty after initialisation
 
-	int curr = frontier.front();
-	graph[curr].setSeen();
-	//Assert: frontier contains ...
+	int curr = graph.frontier.front();
+	graph.frontier.pop();
+	std::cout << "Exploring: " << curr << '\n';
 
+	//This node is the end
 	if (graph[curr].isEnd())
 	{
-		color_frontier(frontier, graph); //Color elements that were in the frontier separately
-		return;
+		color_frontier(graph); //Color elements that were in the frontier separately
+		return curr; //Return this end index
 	}
 
-	if (frontier.empty()) return;
+	graph[curr].setSeen();
+	graph[curr].visit();
+	//Assert: frontier contains ...
 
 	for (int i : graph.get_neighbours(curr))
 	{
@@ -123,10 +122,12 @@ void bfs_step(Graph& graph, std::queue<int>& frontier) //Returns a map containin
 		{
 			graph.parents[i] = curr;
 			graph.distance[i] = graph.distance[curr] + 1;
-			frontier.push(i);
-			graph[i].setFrontier(); //Each node should ol
+			graph.frontier.push(i);
+			graph[i].setSeen(); //Each node should ol
 		}
 	}
+
+	return graph.frontier.front(); //Return index of the node that is now at the fron of the queue
 }
 
 

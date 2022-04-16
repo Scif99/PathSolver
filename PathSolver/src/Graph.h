@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 #include <vector>
+#include <queue>
 #include "node.h"
 
 class Graph 
@@ -24,8 +25,10 @@ public:
 	int get_end();
 	bool has_end();
 
+	void clear();
 	std::unordered_map<int, int> parents;
 	std::unordered_map<int, int> distance;
+	std::queue<int> frontier;
 	
 private:
 	int dim_;
@@ -51,6 +54,13 @@ void Graph::fill(float w_size)
 		}
 
 	}
+}
+
+void Graph::clear()
+{
+	frontier = {};
+	parents = {};
+	distance = {};
 }
 
 //Return a vector containing indices of a node's neighbours

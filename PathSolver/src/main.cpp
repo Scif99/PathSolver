@@ -46,6 +46,7 @@ int main()
             {
                 graph[i].reset();
             }
+            graph.clear(); //Clear all data from last search
         }
 
         //Process Events    
@@ -73,7 +74,13 @@ int main()
                             {
                                 if (graph[i].isStart()) graph[i].reset();
                             }
+
                             curr_node.setStart();
+
+                            //Change 
+                            graph.frontier.pop();
+                            graph.frontier.push(row_no * dim + col_no);
+                            std::cout << "front is now " << graph.frontier.front() << '\n';
                             std::cout << "Placed start at " << row_no * dim + col_no << '\n';
                         }
                     }
@@ -96,11 +103,16 @@ int main()
 
                     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) //User can press Space to run the BFS
                     {
-                        if (graph.has_start() && graph.has_end())
-                        {
-                            std::unordered_map<int, int> parents = bfs(graph);
-                            draw_path(parents, graph);
-                            done = true;
+                        if (graph.has_start() && graph.has_end() && !done)
+                        {     
+
+                            int next = bfs_step(graph);
+                            if (next == graph.get_end())
+                            {
+                                draw_path(graph);
+                                done = true;
+                            }
+
                         }
                         else std::cout << "Please place a start and end location before searching\n";
                     }
