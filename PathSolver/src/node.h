@@ -16,20 +16,15 @@ public:
 	void setPath();
 	void reset();
 
-	bool isStart() const { return is_start_; }
-	bool isEnd() const { return is_end_; }
-	bool isSeen() const { return is_seen_; }
-	bool isPath() const { return is_path_; }
-	bool isWall() const { return is_wall_; }
+	bool isStart() const { return type_== Type::start_; }
+	bool isEnd() const { return type_==Type::end_; }
+	bool isSeen() const { return type_ == Type::seen_; }
+	bool isPath() const { return type_ == Type::path_; }
+	bool isWall() const { return type_ == Type::wall_; }
 
 	
 private:
 	sf::RectangleShape rect_;
-	bool is_wall_;
-	bool is_start_;
-	bool is_end_;
-	bool is_seen_;
-	bool is_path_;
 	enum class Type
 	{
 		empty_,
@@ -39,13 +34,14 @@ private:
 		seen_,
 		path_,
 	};
+	Type type_;
 };
 
 
 
 
 Node::Node(float x, float y, float w_size)
-	:rect_{ sf::RectangleShape() }, is_wall_{ false }, is_start_{ false }, is_end_{false}, is_seen_{false}, is_path_{false}
+	:rect_{ sf::RectangleShape() }, type_{Type::empty_}
 {
 	rect_.setPosition(x, y);
 	rect_.setSize(sf::Vector2f(w_size / 20, w_size / 20)); //Grid is 20x20?
@@ -62,45 +58,39 @@ void Node::draw(sf::RenderTarget& target, sf::RenderStates states) const
 void Node::setStart()
 {
 	rect_.setFillColor(sf::Color::Blue);
-	is_start_ = true;
+	type_ = Type::start_;
 }
 
 void Node::setWall()
 {
 
 	rect_.setFillColor(sf::Color::Black);
-	is_wall_ = true;
+	type_ = Type::wall_;
 }
 
 void Node::setEnd()
 {
 	rect_.setFillColor(sf::Color::Red);
-	is_end_ = true;
+	type_ = Type::end_;
 }
 
 void Node::setSeen()
 {
-	is_seen_ = true;
 	rect_.setFillColor(sf::Color::Cyan);	
+	type_ = Type::seen_;
 }
 
 
 void Node::setPath()
 {
-	if (!is_start_ && !is_end_)
-	{
-		is_path_ = true;
-		rect_.setFillColor(sf::Color::Yellow);
-	}
+	rect_.setFillColor(sf::Color::Yellow);
+	type_ = Type::path_;
+
 }
 
 void Node::reset()
 {
 	rect_.setFillColor(sf::Color::White);
-	is_wall_ = false;
-	is_start_ = false;
-	is_end_ = false;
-	is_seen_ = false;
-	is_path_ = false;
+	type_ == Type::start_;
 }
 

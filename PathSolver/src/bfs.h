@@ -53,8 +53,8 @@ void draw_path(std::unordered_map<int, int>& parents, Graph& graph)
 {
 	int start = graph.get_start();
 	int end = graph.get_end();
-	graph[start].setStart(); //Re-color
-	graph[end].setEnd(); //Re-color
+	//graph[start].setStart(); //Re-color
+	//graph[end].setEnd(); //Re-color
 	
 	//Check if a path exists
 	auto has_end = [&](std::pair<int, int> p) {return p.first == end; }; //Lambda to check if the end node is contained
