@@ -7,6 +7,8 @@
 
 
 
+
+
 int main()
 {
     constexpr int w_size{ 800 }; //Size of the window
@@ -18,34 +20,32 @@ int main()
     graph.fill(w_size);
 
     bool done = false;
+    bool toggle_step = false;
 
     //Game Loop
     while (window.isOpen())
     {
 
+        //User can use left click to place walls
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) //User can use left click to place walls
         {
             if (done) //If user clicks after a search, automatically reset the board
             {
-                for (int i = 0; i < graph.size(); ++i) { graph[i].reset(); }
+                graph.reset();
                 done = false;
             }
-            if (sf::Mouse::getPosition(window).x >=0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size)
+            if (mouse_in_bounds(window,w_size))
             {
                 auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
-                auto& curr_node = graph[row_no*dim  + col_no]; //Node (x,y) can be indexed as y*row_size + x. Don't want a copy
-
-                curr_node.setWall(); //User cannot place walls on starting location
-
+                graph.addWall(row_no * dim + col_no);
             }
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) //Press R to reset the grid
+        //Press R to reset the grid
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) 
         {
-            for (int i = 0; i < graph.size();++i)
-            {
-                graph[i].reset();
-            }
+            graph.reset();
+            done = false;
         }
 
         //Process Events    
@@ -64,45 +64,56 @@ int main()
                 {
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) //User can press 1 to change the start location to mouse position
                     {
-                        if (sf::Mouse::getPosition(window).x >= 0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size) //Clamp...
+                        if (mouse_in_bounds(window,w_size)) //Clamp...
                         {
-                            auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
-                            auto& curr_node = graph[row_no * dim + col_no]; //Node (x,y) can be indexed as y*row_size + x. Don't want a copy
-
-                            for (int i = 0; i < graph.size();++i) //Reset the previous starting cell
-                            {
-                                if (graph[i].isStart()) graph[i].reset();
-                            }
-                            curr_node.setStart();
-                            std::cout << "Placed start at " << row_no * dim + col_no << '\n';
+                            auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked node 
+                            graph.addStart(row_no * dim + col_no);
                         }
                     }
 
                     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) //User can press 2 to change the end location to mouse position
                     {
-                            if (sf::Mouse::getPosition(window).x >= 0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size) //Clamp...
+                            if (mouse_in_bounds(window, w_size)) //Clamp...
                             {
                                 auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
-                                auto& curr_node = graph[row_no*dim + col_no]; //Node (x,y) can be indexed as y*row_size + x. Don't want a copy
-
-                                for (int i = 0; i < graph.size();++i) //Reset the previous starting cell
-                                {
-                                    if (graph[i].isEnd()) graph[i].reset();
-                                }
-                                std::cout << "Placed end at " << row_no * dim + col_no << '\n';
-                                curr_node.setEnd();
+                                graph.addEnd(row_no * dim + col_no);
                             }
                     }
 
                     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) //User can press Space to run the BFS
                     {
-                        if (graph.has_start() && graph.has_end())
-                        {
-                            std::unordered_map<int, int> parents = bfs(graph);
-                            draw_path(parents, graph);
-                            done = true;
+                        //Force a reset if search has already been completed
+                        if (done) std::cout << "press R to reset\n";
+                        
+                        if (graph.start()>=0 && graph.end()>=0 && !done) //Make sure the graph has a start and an end
+                        {     
+                            if (toggle_step == false) 
+                            {
+                                bfs_full(graph);
+                                draw_path(graph);
+                                done = true;
+                            }
+                            else 
+                            {
+                                int next = bfs_step(graph);
+
+                                if (next == -1)
+                                {
+                                    draw_path(graph);
+                                    done = true;
+                                }
+                            }
                         }
                         else std::cout << "Please place a start and end location before searching\n";
+                    }
+
+                    //User can press T to switch between step and full modes
+                    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::T))
+                    {
+                        toggle_step = !toggle_step;
+                        std::string mode = toggle_step ? "Step " : "Full ";
+                        std::cout << "Switched to " << mode << " mode\n";
+                        done = true;
                     }
 
                     break;

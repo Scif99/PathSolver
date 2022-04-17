@@ -2,13 +2,18 @@
 #include <SFML/Graphics.hpp>
 
 
+/*
 
+- The Node class is essentially a wrapper around an sf::rectangleShape
+- A Node object only knows it's own state. It knows nothing about other nodes.
+- The only thing a Node knows about the graph is it's dimensions.
+
+- The seen_ and visited_ data members are purely for visual purposes. 
+
+*/
 
 class Node : sf::RectangleShape {
-
-private:
-	sf::RectangleShape rect_;
-	bool is_seen_;
+public:
 	enum class Type
 	{
 		empty_,
@@ -16,37 +21,28 @@ private:
 		start_,
 		end_,
 		path_,
-		frontier_,
 	};
-	Type type_;
 
-public:
-
-	Node(float x, float y, float w_size, int dim); //Constructor takes an x position, y position and the size of the window
+	Node(float x, float y, float w_size, int dim); //Constructor takes an x position, y position, the size of the window, and the dimensions of the grid
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override; //The draw function is inherited from the sf::Drawable class
-	void setWall();
-	void setStart();
-	void setEnd();
+
+	bool isType(Type t) const { return type_ == t; }
+	void setType(Type t);
+
 	void setSeen();
-	void setPath();
-	void setFrontier();
+	bool isSeen() const { return seen_; }
+
+	void setVisited(); //Simply adds color to a Node (except if the Node is the start/end)
+
 	void reset();
-
-	//void setType(Type t) { type_ = t; }
-
-	bool isStart() const { return type_ == Type::start_; }
-	bool isEnd() const { return type_ == Type::end_; }
-	bool isPath() const { return type_ == Type::path_; }
-	bool isWall() const { return type_ == Type::wall_; }
-	bool isSeen() const { return is_seen_; }
-
-	bool isType(Type t) { return type_ == t; }
-
-
+private:
+	sf::RectangleShape rect_;
+	bool seen_;
+	Type type_;
 };
 
 Node::Node(float x, float y, float w_size, int dim)
-	:rect_{ sf::RectangleShape() }, type_{ Type::empty_ }, is_seen_{ false }
+	:rect_{ sf::RectangleShape() }, type_{ Type::empty_ }, seen_{ false }
 {
 	rect_.setPosition(x, y);
 	rect_.setSize(sf::Vector2f(w_size / dim, w_size / dim)); //Grid is 20x20?
@@ -60,47 +56,58 @@ void Node::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.draw(rect_, states);
 }
 
-void Node::setStart()
+void Node::setType(Type t)
 {
-	rect_.setFillColor(sf::Color::Blue);
-	type_ = Type::start_;
+	switch (t)
+	{
+		case Type::start_:
+		{
+			rect_.setFillColor(sf::Color::Blue);
+			type_ = Type::start_;
+			break;
+		}
+		case Type::end_:
+		{	
+			rect_.setFillColor(sf::Color::Red);
+			type_ = Type::end_; 
+			break;
+		}
+
+		case Type::wall_:
+		{
+			rect_.setFillColor(sf::Color::Black);
+			type_ = Type::wall_;
+			break;
+		}
+
+		case Type::path_:
+		{
+			if (type_ != Type::start_ && type_ != Type::end_) { rect_.setFillColor(sf::Color::Yellow); } //Don't change color of start or end nodes
+			type_ = Type::path_;
+			break;
+		}
+	}
 }
 
-void Node::setWall()
-{
-	rect_.setFillColor(sf::Color::Black);
-	type_ = Type::wall_;
-}
-
-void Node::setEnd()
-{
-	rect_.setFillColor(sf::Color::Red);
-	type_ = Type::end_;
-}
-
+//Flags that a Node has been placed in the queue during a search. 
 void Node::setSeen()
 {
-	rect_.setFillColor(sf::Color::Cyan);	
-	is_seen_ = true;
+	if (type_ != Type::start_ && type_ != Type::end_) { rect_.setFillColor(sf::Color::Cyan); } //Only change color if node isn't start or end
+	seen_ = true;
 }
 
-void Node::setPath()
+//Change color to indicate that a Node has been processed in a search
+void Node::setVisited()
 {
-	rect_.setFillColor(sf::Color::Yellow);
-	type_ = Type::path_;
-}
-
-void Node::setFrontier()
-{
-	rect_.setFillColor(sf::Color::Magenta);
-	type_ = Type::frontier_;
+	if (type_ != Type::start_ && type_ != Type::end_) { rect_.setFillColor(sf::Color::Magenta); }  //Only change color if node isn't start or end
 }
 
 void Node::reset()
 {
 	rect_.setFillColor(sf::Color::White);
 	type_ = Type::empty_;
-	is_seen_ = false;
-
+	seen_ = false;
 }
+
+
 

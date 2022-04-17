@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 #include <vector>
+#include <queue>
 #include "node.h"
 
 class Graph 
@@ -9,9 +10,9 @@ class Graph
 public:
 	Graph(int dim);
 
-	int dim() const { return dim_; }
-	int size() const { return v_nodes_.size(); }
-	void fill(float w_size);
+	int dim() const { return dim_; } //Dimensions of the graph.
+	int size() const { return v_nodes_.size(); } //Total number of Nodes in the graph.
+	void fill(float w_size); //Fill an empty graph with nodes
 	std::vector<int> get_neighbours(int index);
 
 	//Accessors
@@ -19,22 +20,30 @@ public:
 	Node& operator[](int i) { return v_nodes_[i]; }
 
 
-	int get_start();
-	bool has_start();
-	int get_end();
-	bool has_end();
+	int start() const { return start_; }
+	void addStart(int i);
 
+	int end() const { return end_; }
+	void addEnd(int i);
+
+	void addWall(int i);
+	void reset();
+
+	//Data to store information about a search
+	std::unordered_map<int, int> distance;
+	std::queue<int> frontier;
+	std::unordered_map<int, int> parents;
 	
 private:
 	int dim_;
 	std::vector<Node> v_nodes_;
-	//std::unordered_map<int, int> parent_;
-	//std::unordered_map<int, int> distance_;
+	int start_;
+	int end_;
 };
 
 
 Graph::Graph(int dim)
-	:dim_{ dim }, v_nodes_{ {} }
+	:dim_{ dim }, v_nodes_{ {} }, start_{ -1 }, end_{ -1 }
 {}
 
 //Fill the graph up with nodes
@@ -52,6 +61,7 @@ void Graph::fill(float w_size)
 	}
 }
 
+
 //Return a vector containing indices of a node's neighbours
 std::vector<int> Graph::get_neighbours(int index)
 {
@@ -64,40 +74,40 @@ std::vector<int> Graph::get_neighbours(int index)
 
 }
 
-//Return the index of the starting node
-int Graph::get_start()
+//Set the node with given index as the end node
+//Handles reseting the old start
+void Graph::addStart(int i)
 {
-	for (int i = 0;i < size();++i)
-	{
-		if (v_nodes_[i].isStart()) return i;
-	}
+	if (start_ >= 0) v_nodes_[start_].reset(); //Reset the previous start node
+	v_nodes_[i].setType(Node::Type::start_);
+	start_ = i;
 }
 
-//Check if the graph has a starting node
-bool Graph::has_start()
+//Set the node with given index as the end node
+//Handles reseting the old end
+void Graph::addEnd(int i)
 {
-	for (int i = 0;i < size();++i)
-	{
-		if (v_nodes_[i].isStart()) return true;
-	}
-	return false;
+	if (end_ >= 0) v_nodes_[end_].reset(); //Reset the previous start node
+	v_nodes_[i].setType(Node::Type::end_);
+	end_ = i;
 }
 
-//Return the index of the end node
-int Graph::get_end()
+//Add a wall to the node with given index
+void Graph::addWall(int i)
 {
-	for (int i = 0;i < size();++i)
-	{
-		if (v_nodes_[i].isEnd()) return i;
-	}
+	v_nodes_[i].setType(Node::Type::wall_);
 }
 
-//Check if the graph has an end node
-bool Graph::has_end()
+//Reset graph to blank state
+void Graph::reset()
 {
-	for (int i = 0;i < size();++i)
+	for (int i = 0; i < size(); ++i)
 	{
-		if (v_nodes_[i].isEnd()) return true;
+		v_nodes_[i].reset();
 	}
-	return false;
+
+	//Clear data from previous search
+	frontier = {};
+	parents = {};
+	distance = {};
 }
