@@ -73,15 +73,11 @@ int main()
                     {
                         if (sf::Mouse::getPosition(window).x >= 0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size) //Clamp...
                         {
-                            auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
+                            auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked node
                             auto& curr_node = graph[row_no * dim + col_no]; //Node (x,y) can be indexed as y*row_size + x. Don't want a copy
-
-                            for (int i = 0; i < graph.size();++i) //Reset the previous starting cell
-                            {
-                                if (graph[i].isStart()) graph[i].reset();
-                            }
-
-                            curr_node.setStart();
+                            
+                            if(graph.start()>=0) graph[graph.start()].reset(); //Reset the previous start node
+                            graph.setStart(row_no * dim + col_no);
 
                             //Reset the data  
                             graph.clear();
@@ -100,11 +96,8 @@ int main()
                                 auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
                                 auto& curr_node = graph[row_no*dim + col_no]; //Node (x,y) can be indexed as y*row_size + x. Don't want a copy
 
-                                for (int i = 0; i < graph.size();++i) //Reset the previous starting cell
-                                {
-                                    if (graph[i].isEnd()) graph[i].reset();
-                                }
-                                curr_node.setEnd();
+                                if (graph.end() >= 0) graph[graph.end()].reset(); //Reset the previous start node
+                                graph.setEnd(row_no * dim + col_no);
                             }
                     }
 
@@ -114,7 +107,7 @@ int main()
                         {
                             std::cout << "press R to reset\n";
                         }
-                        if (graph.has_start() && graph.has_end() && !done)
+                        if (graph.start()>=0 && graph.end()>=0 && !done)
                         {     
 
                             int next = bfs_step(graph);

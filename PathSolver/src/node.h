@@ -2,10 +2,7 @@
 #include <SFML/Graphics.hpp>
 
 class Node : sf::RectangleShape {
-
-private:
-	sf::RectangleShape rect_;
-	bool seen_;
+public:
 	enum class Type
 	{
 		empty_,
@@ -15,25 +12,37 @@ private:
 		path_,
 		visited_,
 	};
+private:
+	sf::RectangleShape rect_;
+	bool seen_;
 	Type type_;
 
 public:
-
 	Node(float x, float y, float w_size, int dim); //Constructor takes an x position, y position and the size of the window
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override; //The draw function is inherited from the sf::Drawable class
 	void setWall();
 	void setStart();
 	void setEnd();
-	void setSeen();
+
 	void setPath();
 	void setVisited();
+
+	void setType(Type t);
+
+	void setSeen();
 	void reset();
 
-	bool isStart() const { return type_ == Type::start_; }
-	bool isEnd() const { return type_ == Type::end_; }
-	bool isPath() const { return type_ == Type::path_; }
-	bool isWall() const { return type_ == Type::wall_; }
+
+
+	//bool isStart(Type t) const { return type_ == Type::start_; }
+	//bool isEnd() const { return type_ == Type::end_; }
+	//bool isPath() const { return type_ == Type::path_; }
+	//bool isWall() const { return type_ == Type::wall_; }
+
+	bool isType(Type t) const { return type_ == t; }
+
 	bool isSeen() const { return seen_; } 
+
 
 
 };

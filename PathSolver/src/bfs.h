@@ -16,7 +16,8 @@ void bfs_full(Graph& graph) //Returns a map containing the parents of each cell
 	//This is so that the bfs_step function can run properly
 	//Yes this is bad design
 
-	graph[graph.get_start()].setSeen();
+	//Assumes a valis start exists
+	graph[graph.start()].setSeen();
 
 	while (!graph.frontier.empty())
 	{
@@ -25,12 +26,12 @@ void bfs_full(Graph& graph) //Returns a map containing the parents of each cell
 		graph.frontier.pop();
 		graph[curr].setVisited(); 
 
-		if (graph[curr].isEnd()) return; //Early stop 
-		
+		if (graph[curr].isType(Node::Type::end_)) return; //Early stop 
+	
 
 		for (int i : graph.get_neighbours(curr))
 		{
-			if (!graph[i].isSeen() && !graph[i].isWall()) //Don't add walls to the frontier
+			if (!graph[i].isSeen() && !graph[i].isType(Node::Type::wall_)) //Don't add walls to the frontier
 			{
 				graph.parents[i] = curr;
 				graph.distance[i] = graph.distance[curr] + 1;
@@ -57,10 +58,10 @@ int bfs_step(Graph& graph)
 	graph.frontier.pop();
 
 
-	if (graph[curr].isStart()) graph[curr].setSeen();	
+	if (graph[curr].isType(Node::Type::start_)) graph[curr].setSeen();	
 	graph[curr].setVisited();
 
-	if (graph[curr].isEnd())
+	if (graph[curr].isType(Node::Type::end_))
 	{
 		return -1; //Return this end index
 	}
@@ -68,7 +69,7 @@ int bfs_step(Graph& graph)
 
 	for (int i : graph.get_neighbours(curr))
 	{
-		if (!graph[i].isSeen() && !graph[i].isWall()) //Each node should only be in the queue at most once. Don't add walls to the frontier
+		if (!graph[i].isSeen() && !graph[i].isType(Node::Type::wall_)) //Each node should only be in the queue at most once. Don't add walls to the frontier
 		{
 			graph.parents[i] = curr;
 			graph.distance[i] = graph.distance[curr] + 1;
@@ -84,8 +85,9 @@ int bfs_step(Graph& graph)
 
 void draw_path(Graph& graph)
 {
-	int start = graph.get_start();
-	int end = graph.get_end();
+	//Assumes the graph has a start and end
+	int start = graph.start();
+	int end = graph.end();
 
 	//Check if a path exists
 	auto has_end = [&](std::pair<int, int> p) {return p.first == end; }; //Lambda to check if the end node is contained

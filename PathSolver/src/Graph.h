@@ -10,9 +10,9 @@ class Graph
 public:
 	Graph(int dim);
 
-	int dim() const { return dim_; }
-	int size() const { return v_nodes_.size(); }
-	void fill(float w_size);
+	int dim() const { return dim_; } //Dimensions of the graph.
+	int size() const { return v_nodes_.size(); } //Total number of Nodes in the graph.
+	void fill(float w_size); //Fill an empty graph with nodes
 	std::vector<int> get_neighbours(int index);
 
 	//Accessors
@@ -20,25 +20,32 @@ public:
 	Node& operator[](int i) { return v_nodes_[i]; }
 
 
-	int get_start();
-	bool has_start();
-	int get_end();
-	bool has_end();
+	int start() const { return start_; }
+
+	void setStart(int i);
+	int end() const { return end_; }
+	void setEnd(int i);
 
 	void clear();
-	std::unordered_map<int, int> parents;
+
+
 	std::unordered_map<int, int> distance;
 	std::queue<int> frontier;
+	std::unordered_map<int, int> parents;
 	
 private:
 	int dim_;
 	std::vector<Node> v_nodes_;
+	int start_;
+	int end_;
+
+
 
 };
 
 
 Graph::Graph(int dim)
-	:dim_{ dim }, v_nodes_{ {} }
+	:dim_{ dim }, v_nodes_{ {} }, start_{ -1 }, end_{ -1 }
 {}
 
 //Fill the graph up with nodes
@@ -75,40 +82,14 @@ std::vector<int> Graph::get_neighbours(int index)
 
 }
 
-//Return the index of the starting node
-int Graph::get_start()
+void Graph::setStart(int i)
 {
-	for (int i = 0;i < size();++i)
-	{
-		if (v_nodes_[i].isStart()) return i;
-	}
+	v_nodes_[i].setStart();
+	start_ = i;
 }
 
-//Check if the graph has a starting node
-bool Graph::has_start()
+void Graph::setEnd(int i)
 {
-	for (int i = 0;i < size();++i)
-	{
-		if (v_nodes_[i].isStart()) return true;
-	}
-	return false;
-}
-
-//Return the index of the end node
-int Graph::get_end()
-{
-	for (int i = 0;i < size();++i)
-	{
-		if (v_nodes_[i].isEnd()) return i;
-	}
-}
-
-//Check if the graph has an end node
-bool Graph::has_end()
-{
-	for (int i = 0;i < size();++i)
-	{
-		if (v_nodes_[i].isEnd()) return true;
-	}
-	return false;
+	v_nodes_[i].setEnd();
+	end_ = i;
 }
