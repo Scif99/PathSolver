@@ -46,7 +46,6 @@ void bfs_full(Graph& graph) //Returns a map containing the parents of each cell
 
 	}
 	return;
-
 }
 
 

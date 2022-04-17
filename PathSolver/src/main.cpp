@@ -34,7 +34,7 @@ int main()
                 graph.reset();
                 done = false;
             }
-            if (in_bounds(window,w_size))
+            if (mouse_in_bounds(window,w_size))
             {
                 auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
                 graph.addWall(row_no * dim + col_no);
@@ -64,7 +64,7 @@ int main()
                 {
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) //User can press 1 to change the start location to mouse position
                     {
-                        if (in_bounds(window,w_size)) //Clamp...
+                        if (mouse_in_bounds(window,w_size)) //Clamp...
                         {
                             auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked node 
                             graph.addStart(row_no * dim + col_no);
@@ -73,7 +73,7 @@ int main()
 
                     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) //User can press 2 to change the end location to mouse position
                     {
-                            if (in_bounds(window, w_size)) //Clamp...
+                            if (mouse_in_bounds(window, w_size)) //Clamp...
                             {
                                 auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
                                 graph.addEnd(row_no * dim + col_no);

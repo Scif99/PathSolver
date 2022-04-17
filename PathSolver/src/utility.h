@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 
 //Checks whether the mouse position lies within the window
-bool in_bounds(const sf::Window& win, int win_size)
+bool mouse_in_bounds(const sf::Window& win, int win_size)
 {
 	return sf::Mouse::getPosition(win).x >= 0 &&
 		sf::Mouse::getPosition(win).y >= 0 &&
