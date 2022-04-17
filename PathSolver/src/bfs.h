@@ -12,16 +12,12 @@
 void bfs_full(Graph& graph) //Returns a map containing the parents of each cell
 {
 
-	//Note initialisation is done when user places a start node.
-	//This is so that the bfs_step function can run properly
-	//Yes this is bad design
-
 	int start = graph.start();
 
+	//Initialise
 	graph.frontier.push(start);
 	graph.parents[start] = -1;
 	graph.distance[start] = 0;
-
 
 
 	//Assumes a valid start exists
@@ -32,7 +28,8 @@ void bfs_full(Graph& graph) //Returns a map containing the parents of each cell
 
 		int curr = graph.frontier.front();
 		graph.frontier.pop();
-		graph[curr].setVisited(); 
+		graph[curr].setType(Node::Type::visited_); 
+		std::cout << "exploring " << curr << '\n';
 
 		if (graph[curr].isType(Node::Type::end_)) return; //Early stop 
 	
@@ -56,18 +53,28 @@ void bfs_full(Graph& graph) //Returns a map containing the parents of each cell
 
 //On each iteration, the frontier will be printed
 //Returns the index of the node that is next in the queue after the current one
-
 int bfs_step(Graph& graph)
 {
-	if (graph.frontier.empty()) return -1; //If the frontier is empty then we know a path cannot exist, but this case explicitely handled by the draw_path function
+	//If the frontier is empty then we know a path cannot exist, but this case explicitely handled by the draw_path 
+	if (graph.frontier.empty())
+	{
+		//If frontier is empty and start has been explored, then no path must exist
+		if (graph[graph.start()].isSeen()) return -1;
 
+		//Otherwise it means the frontier hasn't been initialised yet, so we initialise.
+		int start = graph.start();
+		graph.frontier.push(start);
+		graph.parents[start] = -1;
+		graph.distance[start] = 0;
+
+	}
 
 	int curr = graph.frontier.front(); //Note that the frontier will always be non
 	graph.frontier.pop();
 
 
-	if (graph[curr].isType(Node::Type::start_)) graph[curr].setSeen();	
-	graph[curr].setVisited();
+	if (graph[curr].isType(Node::Type::start_)) { graph[curr].setSeen(); }
+	graph[curr].setType(Node::Type::visited_);
 
 	if (graph[curr].isType(Node::Type::end_))
 	{
@@ -87,7 +94,7 @@ int bfs_step(Graph& graph)
 		}
 	}
 
-	return graph.frontier.front(); //Return index of the node that is now at the fron of the queue
+	return graph.frontier.front(); //Return index of next node to be processed
 }
 
 
@@ -111,12 +118,12 @@ void draw_path(Graph& graph)
 	while (graph.parents[curr] >= 0)
 	{
 		int p = graph.parents[curr];
-		graph[p].setPath();
+		graph[p].setType(Node::Type::path_);
 		curr = p;
 		++dist;
 	}
 	std::cout << "Path found with manhatten distance = " << dist << '\n';
-	graph[start].setStart(); //Re-color
-	graph[end].setEnd(); //Re-color
+	graph[start].setType(Node::Type::start_); //Re-color
+	graph[end].setType(Node::Type::end_); //Re-color
 }
 

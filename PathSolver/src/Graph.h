@@ -22,11 +22,14 @@ public:
 
 	int start() const { return start_; }
 	void addStart(int i);
+
 	int end() const { return end_; }
 	void addEnd(int i);
-	void clear();
+
+	void addWall(int i);
 	void reset();
 
+	//Data to store information about a search
 	std::unordered_map<int, int> distance;
 	std::queue<int> frontier;
 	std::unordered_map<int, int> parents;
@@ -58,12 +61,6 @@ void Graph::fill(float w_size)
 	}
 }
 
-void Graph::clear()
-{
-	frontier = {};
-	parents = {};
-	distance = {};
-}
 
 //Return a vector containing indices of a node's neighbours
 std::vector<int> Graph::get_neighbours(int index)
@@ -77,19 +74,28 @@ std::vector<int> Graph::get_neighbours(int index)
 
 }
 
+//Set the node with given index as the end node
+//Handles reseting the old start
 void Graph::addStart(int i)
 {
 	if (start_ >= 0) v_nodes_[start_].reset(); //Reset the previous start node
-	v_nodes_[i].setStart();
+	v_nodes_[i].setType(Node::Type::start_);
 	start_ = i;
 }
 
+//Set the node with given index as the end node
 //Handles reseting the old end
 void Graph::addEnd(int i)
 {
 	if (end_ >= 0) v_nodes_[end_].reset(); //Reset the previous start node
-	v_nodes_[i].setEnd();
+	v_nodes_[i].setType(Node::Type::end_);
 	end_ = i;
+}
+
+//Add a wall to the node with given index
+void Graph::addWall(int i)
+{
+	v_nodes_[i].setType(Node::Type::wall_);
 }
 
 //Reset graph to blank state
@@ -99,6 +105,9 @@ void Graph::reset()
 	{
 		v_nodes_[i].reset();
 	}
-	clear(); //Clear all data from last search
 
+	//Clear data from previous search
+	frontier = {};
+	parents = {};
+	distance = {};
 }

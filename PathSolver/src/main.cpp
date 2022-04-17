@@ -20,7 +20,7 @@ int main()
     graph.fill(w_size);
 
     bool done = false;
-    bool toggle_step;
+    bool toggle_step = false;
 
     //Game Loop
     while (window.isOpen())
@@ -30,16 +30,13 @@ int main()
         {
             if (done) //If user clicks after a search, automatically reset the board
             {
-                for (int i = 0; i < graph.size(); ++i) { graph[i].reset(); }
+                graph.reset();
                 done = false;
             }
-            if (sf::Mouse::getPosition(window).x >=0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size)
+            if (in_bounds(window,w_size))
             {
                 auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
-                auto& curr_node = graph[row_no*dim  + col_no]; //Node (x,y) can be indexed as y*row_size + x. Don't want a copy
-
-                curr_node.setWall(); //User cannot place walls on starting location
-
+                graph.addWall(row_no * dim + col_no);
             }
         }
 
@@ -84,30 +81,36 @@ int main()
                     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) //User can press Space to run the BFS
                     {
                         //Force a reset if search has already been completed
-                        if (done)
-                        {
-                            std::cout << "press R to reset\n";
-                        }
-                        if (graph.start()>=0 && graph.end()>=0 && !done)
+                        if (done) std::cout << "press R to reset\n";
+                        
+                        if (graph.start()>=0 && graph.end()>=0 && !done) //Make sure the graph has a start and an end
                         {     
+                            if (toggle_step == false) 
+                            {
+                                bfs_full(graph);
+                                draw_path(graph);
+                                done = true;
+                            }
+                            else 
+                            {
+                                int next = bfs_step(graph);
 
-                            //int start = graph.start();
-
-                            //graph.frontier.push(start);
-                            //graph.parents[start] = -1;
-                            //graph.distance[start] = 0;
-
-                            //int next = bfs_step(graph);
-                            //if (next ==-1)
-                            //{
-                            //    done = true;
-                            //    draw_path(graph);
-                            //}
-                            bfs_full(graph);
-                            draw_path(graph);
-
+                                if (next == -1)
+                                {
+                                    draw_path(graph);
+                                    done = true;
+                                }
+                            }
                         }
                         else std::cout << "Please place a start and end location before searching\n";
+                    }
+
+                    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::T))
+                    {
+                        toggle_step = !toggle_step;
+                        std::string mode = toggle_step ? "Step " : "Full ";
+                        std::cout << "Switched to " << mode << " mode\n";
+                        done = true;
                     }
                     break;
                 }
