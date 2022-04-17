@@ -26,6 +26,7 @@ int main()
     while (window.isOpen())
     {
 
+        //User can use left click to place walls
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) //User can use left click to place walls
         {
             if (done) //If user clicks after a search, automatically reset the board
@@ -40,7 +41,8 @@ int main()
             }
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) //Press R to reset the grid
+        //Press R to reset the grid
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) 
         {
             graph.reset();
             done = false;
@@ -105,6 +107,7 @@ int main()
                         else std::cout << "Please place a start and end location before searching\n";
                     }
 
+                    //User can press T to switch between step and full modes
                     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::T))
                     {
                         toggle_step = !toggle_step;
@@ -112,6 +115,7 @@ int main()
                         std::cout << "Switched to " << mode << " mode\n";
                         done = true;
                     }
+
                     break;
                 }
 

@@ -3,10 +3,12 @@
 
 
 /*
-The Node class encapsulates
-- The Node class is essentially a wrapper around a rect_shape
+
+- The Node class is essentially a wrapper around an sf::rectangleShape
 - A Node object only knows it's own state. It knows nothing about other nodes.
 - The only thing a Node knows about the graph is it's dimensions.
+
+- The seen_ and visited_ data members are purely for visual purposes. 
 
 */
 
@@ -19,7 +21,6 @@ public:
 		start_,
 		end_,
 		path_,
-		visited_,
 	};
 
 	Node(float x, float y, float w_size, int dim); //Constructor takes an x position, y position, the size of the window, and the dimensions of the grid
@@ -30,6 +31,8 @@ public:
 
 	void setSeen();
 	bool isSeen() const { return seen_; }
+
+	void setVisited(); //Simply adds color to a Node (except if the Node is the start/end)
 
 	void reset();
 private:
@@ -83,22 +86,20 @@ void Node::setType(Type t)
 			type_ = Type::path_;
 			break;
 		}
-
-		case Type::visited_:
-		{
-			if (type_ != Type::start_ && type_ != Type::end_) rect_.setFillColor(sf::Color::Magenta);  //Only change color if node isn't start or end
-			//type_ = Type::visited_;
-			break;
-		}
-
-	
 	}
 }
 
+//Flags that a Node has been placed in the queue during a search. 
 void Node::setSeen()
 {
 	if (type_ != Type::start_ && type_ != Type::end_) { rect_.setFillColor(sf::Color::Cyan); } //Only change color if node isn't start or end
 	seen_ = true;
+}
+
+//Change color to indicate that a Node has been processed in a search
+void Node::setVisited()
+{
+	if (type_ != Type::start_ && type_ != Type::end_) { rect_.setFillColor(sf::Color::Magenta); }  //Only change color if node isn't start or end
 }
 
 void Node::reset()

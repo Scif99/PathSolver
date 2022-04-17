@@ -28,8 +28,7 @@ void bfs_full(Graph& graph) //Returns a map containing the parents of each cell
 
 		int curr = graph.frontier.front();
 		graph.frontier.pop();
-		graph[curr].setType(Node::Type::visited_); 
-		std::cout << "exploring " << curr << '\n';
+		graph[curr].setVisited();
 
 		if (graph[curr].isType(Node::Type::end_)) return; //Early stop 
 	
@@ -66,15 +65,15 @@ int bfs_step(Graph& graph)
 		graph.frontier.push(start);
 		graph.parents[start] = -1;
 		graph.distance[start] = 0;
+		graph[start].setSeen();
 
 	}
 
 	int curr = graph.frontier.front(); //Note that the frontier will always be non
 	graph.frontier.pop();
+	std::cout << "Exploring " << curr << '\n';
 
-
-	if (graph[curr].isType(Node::Type::start_)) { graph[curr].setSeen(); }
-	graph[curr].setType(Node::Type::visited_);
+	graph[curr].setVisited();
 
 	if (graph[curr].isType(Node::Type::end_))
 	{
