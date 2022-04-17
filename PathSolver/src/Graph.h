@@ -21,13 +21,11 @@ public:
 
 
 	int start() const { return start_; }
-
-	void setStart(int i);
+	void addStart(int i);
 	int end() const { return end_; }
-	void setEnd(int i);
-
+	void addEnd(int i);
 	void clear();
-
+	void reset();
 
 	std::unordered_map<int, int> distance;
 	std::queue<int> frontier;
@@ -38,9 +36,6 @@ private:
 	std::vector<Node> v_nodes_;
 	int start_;
 	int end_;
-
-
-
 };
 
 
@@ -82,14 +77,28 @@ std::vector<int> Graph::get_neighbours(int index)
 
 }
 
-void Graph::setStart(int i)
+void Graph::addStart(int i)
 {
+	if (start_ >= 0) v_nodes_[start_].reset(); //Reset the previous start node
 	v_nodes_[i].setStart();
 	start_ = i;
 }
 
-void Graph::setEnd(int i)
+//Handles reseting the old end
+void Graph::addEnd(int i)
 {
+	if (end_ >= 0) v_nodes_[end_].reset(); //Reset the previous start node
 	v_nodes_[i].setEnd();
 	end_ = i;
+}
+
+//Reset graph to blank state
+void Graph::reset()
+{
+	for (int i = 0; i < size(); ++i)
+	{
+		v_nodes_[i].reset();
+	}
+	clear(); //Clear all data from last search
+
 }

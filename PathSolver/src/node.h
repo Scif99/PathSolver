@@ -23,21 +23,14 @@ public:
 	void setWall();
 	void setStart();
 	void setEnd();
-
 	void setPath();
 	void setVisited();
 
-	void setType(Type t);
+	//void setType(Type t);
 
 	void setSeen();
 	void reset();
 
-
-
-	//bool isStart(Type t) const { return type_ == Type::start_; }
-	//bool isEnd() const { return type_ == Type::end_; }
-	//bool isPath() const { return type_ == Type::path_; }
-	//bool isWall() const { return type_ == Type::wall_; }
 
 	bool isType(Type t) const { return type_ == t; }
 
@@ -61,6 +54,8 @@ void Node::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(rect_, states);
 }
+
+
 
 void Node::setStart()
 {
@@ -96,8 +91,6 @@ void Node::setPath()
 	if (type_ != Type::start_ && type_ != Type::end_) { rect_.setFillColor(sf::Color::Yellow); } //Only change color if node isn't start or end
 	type_ = Type::path_;
 }
-
-
 
 void Node::reset()
 {

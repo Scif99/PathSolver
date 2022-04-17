@@ -16,8 +16,16 @@ void bfs_full(Graph& graph) //Returns a map containing the parents of each cell
 	//This is so that the bfs_step function can run properly
 	//Yes this is bad design
 
-	//Assumes a valis start exists
-	graph[graph.start()].setSeen();
+	int start = graph.start();
+
+	graph.frontier.push(start);
+	graph.parents[start] = -1;
+	graph.distance[start] = 0;
+
+
+
+	//Assumes a valid start exists
+	graph[start].setSeen();
 
 	while (!graph.frontier.empty())
 	{

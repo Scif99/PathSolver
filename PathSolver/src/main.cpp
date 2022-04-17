@@ -5,15 +5,8 @@
 #include "utility.h"
 #include "bfs.h"
 
-void reset(Graph& g)
-{
-    for (int i = 0; i < g.size(); ++i)
-    {
-        g[i].reset();
-    }
-    g.clear(); //Clear all data from last search
 
-}
+
 
 
 int main()
@@ -27,6 +20,7 @@ int main()
     graph.fill(w_size);
 
     bool done = false;
+    bool toggle_step;
 
     //Game Loop
     while (window.isOpen())
@@ -51,7 +45,7 @@ int main()
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) //Press R to reset the grid
         {
-            reset(graph);
+            graph.reset();
             done = false;
         }
 
@@ -71,38 +65,25 @@ int main()
                 {
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) //User can press 1 to change the start location to mouse position
                     {
-                        if (sf::Mouse::getPosition(window).x >= 0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size) //Clamp...
+                        if (in_bounds(window,w_size)) //Clamp...
                         {
-                            auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked node
-                            auto& curr_node = graph[row_no * dim + col_no]; //Node (x,y) can be indexed as y*row_size + x. Don't want a copy
-                            
-                            if(graph.start()>=0) graph[graph.start()].reset(); //Reset the previous start node
-                            graph.setStart(row_no * dim + col_no);
-
-                            //Reset the data  
-                            graph.clear();
-                            graph.frontier.push(row_no * dim + col_no);
-                            graph.parents[row_no * dim + col_no] = -1;
-                            graph.distance[row_no * dim + col_no] = 0;
-
-
+                            auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked node 
+                            graph.addStart(row_no * dim + col_no);
                         }
                     }
 
                     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) //User can press 2 to change the end location to mouse position
                     {
-                            if (sf::Mouse::getPosition(window).x >= 0 && sf::Mouse::getPosition(window).y >= 0 && sf::Mouse::getPosition(window).x < w_size && sf::Mouse::getPosition(window).y < w_size) //Clamp...
+                            if (in_bounds(window, w_size)) //Clamp...
                             {
                                 auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
-                                auto& curr_node = graph[row_no*dim + col_no]; //Node (x,y) can be indexed as y*row_size + x. Don't want a copy
-
-                                if (graph.end() >= 0) graph[graph.end()].reset(); //Reset the previous start node
-                                graph.setEnd(row_no * dim + col_no);
+                                graph.addEnd(row_no * dim + col_no);
                             }
                     }
 
                     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) //User can press Space to run the BFS
                     {
+                        //Force a reset if search has already been completed
                         if (done)
                         {
                             std::cout << "press R to reset\n";
@@ -110,14 +91,20 @@ int main()
                         if (graph.start()>=0 && graph.end()>=0 && !done)
                         {     
 
-                            int next = bfs_step(graph);
-                            if (next ==-1)
-                            {
-                                done = true;
-                                draw_path(graph);
-                            }
-                            //bfs_full(graph);
-                            //draw_path(graph);
+                            //int start = graph.start();
+
+                            //graph.frontier.push(start);
+                            //graph.parents[start] = -1;
+                            //graph.distance[start] = 0;
+
+                            //int next = bfs_step(graph);
+                            //if (next ==-1)
+                            //{
+                            //    done = true;
+                            //    draw_path(graph);
+                            //}
+                            bfs_full(graph);
+                            draw_path(graph);
 
                         }
                         else std::cout << "Please place a start and end location before searching\n";
