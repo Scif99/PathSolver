@@ -4,6 +4,7 @@
 #include <vector>
 #include <queue>
 #include "node.h"
+#include <iterator>
 
 class Graph 
 {
@@ -30,15 +31,15 @@ public:
 	void reset();
 
 
-
 	//Iterators
 	using iterator = std::vector<Node>::iterator;
 	using const_iterator = std::vector<Node>::const_iterator;
 
 	iterator begin() { return v_nodes_.begin(); }
-	iterator end() { return v_nodes_.begin(); }
+	iterator end() { return v_nodes_.end(); }
 	const_iterator cbegin() const { return v_nodes_.cbegin(); }
 	const_iterator cend() const { return v_nodes_.cend(); }
+
 
 
 
@@ -57,7 +58,8 @@ private:
 
 Graph::Graph(int dim)
 	:dim_{ dim }, v_nodes_{ {} }, start_{ -1 }, end_{ -1 }
-{}
+{
+}
 
 //Fill the graph up with nodes
 void Graph::fill(float w_size) 
