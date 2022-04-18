@@ -6,9 +6,6 @@
 #include "bfs.h"
 
 
-
-
-
 int main()
 {
     constexpr int w_size{ 800 }; //Size of the window
@@ -85,7 +82,7 @@ int main()
                         //Force a reset if search has already been completed
                         if (done) std::cout << "press R to reset\n";
                         
-                        if (graph.start()>=0 && graph.end()>=0 && !done) //Make sure the graph has a start and an end
+                        if (graph.start_index()>=0 && graph.end_index()>=0 && !done) //Make sure the graph has a start and an end
                         {     
                             if (toggle_step == false) 
                             {

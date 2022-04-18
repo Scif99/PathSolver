@@ -20,14 +20,27 @@ public:
 	Node& operator[](int i) { return v_nodes_[i]; }
 
 
-	int start() const { return start_; }
+	int start_index() const { return start_; }
 	void addStart(int i);
 
-	int end() const { return end_; }
+	int end_index() const { return end_; }
 	void addEnd(int i);
 
 	void addWall(int i);
 	void reset();
+
+
+
+	//Iterators
+	using iterator = std::vector<Node>::iterator;
+	using const_iterator = std::vector<Node>::const_iterator;
+
+	iterator begin() { return v_nodes_.begin(); }
+	iterator end() { return v_nodes_.begin(); }
+	const_iterator cbegin() const { return v_nodes_.cbegin(); }
+	const_iterator cend() const { return v_nodes_.cend(); }
+
+
 
 	//Data to store information about a search
 	std::unordered_map<int, int> distance;

@@ -12,7 +12,7 @@
 void bfs_full(Graph& graph) //Returns a map containing the parents of each cell
 {
 
-	int start = graph.start();
+	int start = graph.start_index();
 
 	//Initialise
 	graph.frontier.push(start);
@@ -57,10 +57,10 @@ int bfs_step(Graph& graph)
 	if (graph.frontier.empty())
 	{
 		//If frontier is empty and start has been explored, then no path must exist
-		if (graph[graph.start()].isSeen()) return -1;
+		if (graph[graph.start_index()].isSeen()) return -1;
 
 		//Otherwise it means the frontier hasn't been initialised yet, so we initialise.
-		int start = graph.start();
+		int start = graph.start_index();
 		graph.frontier.push(start);
 		graph.parents[start] = -1;
 		graph.distance[start] = 0;
@@ -99,8 +99,8 @@ int bfs_step(Graph& graph)
 void draw_path(Graph& graph)
 {
 	//Assumes the graph has a start and end
-	int start = graph.start();
-	int end = graph.end();
+	int start = graph.start_index();
+	int end = graph.end_index();
 
 	//Check if a path exists
 	auto has_end = [&](std::pair<int, int> p) {return p.first == end; }; //Lambda to check if the end node is contained
