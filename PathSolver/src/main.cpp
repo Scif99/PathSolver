@@ -82,7 +82,8 @@ int main()
                         //Force a reset if search has already been completed
                         if (done) std::cout << "press R to reset\n";
                         
-                        if (graph.start_index()>=0 && graph.end_index()>=0 && !done) //Make sure the graph has a start and an end
+                        else if (!graph.start_index() || !graph.end_index()) std::cout << "Please place a start and end location before searching\n";
+                        else
                         {     
                             if (toggle_step == false) 
                             {
@@ -101,7 +102,7 @@ int main()
                                 }
                             }
                         }
-                        else std::cout << "Please place a start and end location before searching\n";
+                        
                     }
 
                     //User can press T to switch between step and full modes

@@ -5,6 +5,7 @@
 #include <queue>
 #include "node.h"
 #include <iterator>
+#include <optional>
 
 class Graph 
 {
@@ -21,10 +22,10 @@ public:
 	Node& operator[](int i) { return v_nodes_[i]; }
 
 
-	int start_index() const { return start_; }
+	std::optional<int> start_index() const; 
 	void addStart(int i);
 
-	int end_index() const { return end_; }
+	std::optional<int> end_index() const;
 	void addEnd(int i);
 
 	void addWall(int i);
@@ -57,7 +58,7 @@ private:
 
 
 Graph::Graph(int dim)
-	:dim_{ dim }, v_nodes_{ {} }, start_{ -1 }, end_{ -1 }
+	:dim_{ dim }, v_nodes_{ {} }, start_{  }, end_{ -1 }
 {
 }
 
@@ -98,6 +99,13 @@ void Graph::addStart(int i)
 	start_ = i;
 }
 
+//Returns an optional start index
+std::optional<int> Graph::start_index() const 
+{
+	if (start_ > -1) return start_;
+	else return std::nullopt;
+}
+
 //Set the node with given index as the end node
 //Handles reseting the old end
 void Graph::addEnd(int i)
@@ -106,6 +114,14 @@ void Graph::addEnd(int i)
 	v_nodes_[i].setType(Node::Type::end_);
 	end_ = i;
 }
+
+//Returns an optional end index
+std::optional<int> Graph::end_index() const
+{
+	if (end_ > -1) return end_;
+	else return std::nullopt;
+}
+
 
 //Add a wall to the node with given index
 void Graph::addWall(int i)
