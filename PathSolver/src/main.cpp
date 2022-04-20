@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-#include "graph.h"
+//#include "graph.h"
 #include "utility.h"
 #include "bfs.h"
 
@@ -13,7 +13,7 @@ int main()
 
     //Setup the grid
     constexpr int dim{ 20 };
-    Graph graph(dim);
+    BFSGraph graph(dim);
     graph.fill(w_size);
 
     bool done = false;

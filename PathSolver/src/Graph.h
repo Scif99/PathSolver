@@ -6,11 +6,15 @@
 #include "node.h"
 #include <iterator>
 #include <optional>
+#include <cstdlib>
+
 
 class Graph 
 {
 public:
-	Graph(int dim);
+	Graph(int dim)
+		:dim_{ dim }, v_nodes_{ {} }, start_{  }, end_{ -1 }
+	{}
 
 	int dim() const { return dim_; } //Dimensions of the graph.
 	int size() const { return v_nodes_.size(); } //Total number of Nodes in the graph.
@@ -30,8 +34,7 @@ public:
 
 	void addWall(int i);
 	void addGrass(int i);
-	void reset();
-
+	virtual void reset();
 
 	//Iterators
 	using iterator = std::vector<Node>::iterator;
@@ -43,11 +46,10 @@ public:
 	const_iterator cend() const { return v_nodes_.cend(); }
 
 	//Data to store information about a search
-	std::unordered_map<int, int> distance; // For non-weighted
-	std::queue<int> frontier;
+	//std::unordered_map<int, int> distance; // For non-weighted
+	//std::queue<int> frontier;
 	std::unordered_map<int, int> parents;
-	std::unordered_map<int, int> cost_so_far; //For weighted
-
+	//std::unordered_map<int, int> cost_so_far;
 	
 private:
 	int dim_;
@@ -56,27 +58,20 @@ private:
 	int end_;
 };
 
-
-Graph::Graph(int dim)
-	:dim_{ dim }, v_nodes_{ {} }, start_{  }, end_{ -1 }
-{
-}
-
 //Fill the graph up with nodes
-void Graph::fill(float w_size) 
+void Graph::fill(float w_size)
 {
 	//Fill the grid
 	for (int i = 0; i < dim_; ++i) //Row 
 	{
-		for (int j = 0;j < dim_;++j) //Column
+		for (int j = 0; j < dim_; ++j) //Column
 		{
 			float units = w_size / dim_;
-			v_nodes_.push_back(Node{ j * units, i * units, w_size , dim_});//The Nodes are stored in row-major order ----->
+			v_nodes_.push_back(Node{ j * units, i * units, w_size , dim_ });//The Nodes are stored in row-major order ----->
 		}
 
 	}
 }
-
 
 //Return a vector containing indices of a node's neighbours
 std::vector<int> Graph::get_neighbours(int index)
@@ -100,7 +95,7 @@ void Graph::addStart(int i)
 }
 
 //Returns an optional start index
-std::optional<int> Graph::start_index() const 
+std::optional<int> Graph::start_index() const
 {
 	if (start_ > -1) return start_;
 	else return std::nullopt;
@@ -123,11 +118,13 @@ std::optional<int> Graph::end_index() const
 }
 
 //Add a wall to the node with given index
+//Walls have no weight, they cannot be explored
 void Graph::addWall(int i)
 {
 	v_nodes_[i].setType(Node::Type::wall_);
 }
 
+//Grass is a node with weight 5
 void Graph::addGrass(int i)
 {
 	v_nodes_[i].setType(Node::Type::grass_);
@@ -140,17 +137,82 @@ void Graph::reset()
 	{
 		v_nodes_[i].reset();
 	}
-
-	//Clear data from previous search
-	frontier = {};
 	parents = {};
-	distance = {};
 }
 
 
-struct WeightedGraph : Graph 
+
+/*
+Different specialisations of Graph, each for a different algorithm.
+
+*/
+
+struct BFSGraph : Graph
 {
-	WeightedGraph(int dim) : Graph(dim) {}
+	BFSGraph(int dim): Graph(dim) {}
+
+	int distance_to(int i) { return distance[i]; }
+	void reset() override;
+	std::unordered_map<int, int> distance; // For non-weighted
+	std::queue<int> frontier; //BFS uses a queue
+};
+
+
+void BFSGraph::reset()
+{
+	Graph::reset();
+	distance = {};
+	frontier = {};
+}
+
+struct DjikstraGraph : Graph
+{
+	DjikstraGraph(int dim): Graph(dim) {}
 	int cost(int in, int out) const { return Graph::operator[](out).isType(Node::Type::grass_) ? 5 : 1; }
+	int distance_to(int i) { return cost_so_far[i]; }
+	std::unordered_map<int, int> cost_so_far;
+	//std::priority_queue
+};
+
+
+struct Astar : Graph 
+{
+	Astar(int dim) : Graph(dim) {}
+	int cost(int in, int out) const { return Graph::operator[](out).isType(Node::Type::grass_) ? 5 : 1; }
+	int distance_to(int i) { return cost_so_far[i]; }
+	//double heuristic(int a, int b) const {return std::abs() }
+	std::unordered_map<int, int> cost_so_far;
+
+
+
 
 };
+
+
+template<typename Graph>
+void draw_path(Graph& graph)
+{
+	//Assumes the graph has a start and end
+	int start = *graph.start_index();
+	int end = *graph.end_index();
+
+	//Check if a path exists
+	auto has_end = [&](std::pair<int, int> p) {return p.first == end; }; //Lambda to check if the end node is contained
+	if (std::find_if(graph.parents.begin(), graph.parents.end(), has_end) == graph.parents.end())
+	{
+		std::cout << "No path exists\n";
+		return;
+	}
+
+	int curr = end;
+
+	while (graph.parents[curr] != start)
+	{
+		int p = graph.parents[curr];
+		graph[p].setType(Node::Type::path_);
+		curr = p;
+	}
+	std::cout << "Path found with manhatten distance = " << graph.distance_to(end) << '\n';
+	graph[start].setType(Node::Type::start_); //Re-color
+	graph[end].setType(Node::Type::end_); //Re-color
+}

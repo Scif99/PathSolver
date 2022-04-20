@@ -110,7 +110,6 @@ void Node::Visited()
 	if (type_ != Type::start_ && type_ != Type::end_) { rect_.setFillColor(sf::Color::Magenta); }  //Only change color if node isn't start or end
 }
 
-
 void Node::reset()
 {
 	rect_.setFillColor(sf::Color::White);
