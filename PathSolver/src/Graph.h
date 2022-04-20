@@ -29,6 +29,7 @@ public:
 	void addEnd(int i);
 
 	void addWall(int i);
+	void addGrass(int i);
 	void reset();
 
 
@@ -40,9 +41,6 @@ public:
 	iterator end() { return v_nodes_.end(); }
 	const_iterator cbegin() const { return v_nodes_.cbegin(); }
 	const_iterator cend() const { return v_nodes_.cend(); }
-
-
-
 
 	//Data to store information about a search
 	std::unordered_map<int, int> distance;
@@ -122,12 +120,22 @@ std::optional<int> Graph::end_index() const
 	else return std::nullopt;
 }
 
-
 //Add a wall to the node with given index
 void Graph::addWall(int i)
 {
 	v_nodes_[i].setType(Node::Type::wall_);
 }
+
+//Add a wall to the node with given index
+void Graph::addGrass(int i)
+{
+	v_nodes_[i].setType(Node::Type::grass_);
+}
+
+//void Graph::addWeight(int i)
+//{
+//	v_nodes_[i].set
+//}
 
 //Reset graph to blank state
 void Graph::reset()

@@ -38,6 +38,21 @@ int main()
             }
         }
 
+        //User can use right click to place weight...
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) //User can use left click to place walls
+        {
+            if (done) //If user clicks after a search, automatically reset the board
+            {
+                graph.reset();
+                done = false;
+            }
+            if (mouse_in_bounds(window, w_size))
+            {
+                auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
+                graph.addGrass(row_no * dim + col_no);
+            }
+        }
+
         //Press R to reset the grid
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) 
         {
