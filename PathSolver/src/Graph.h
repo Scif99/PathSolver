@@ -43,9 +43,11 @@ public:
 	const_iterator cend() const { return v_nodes_.cend(); }
 
 	//Data to store information about a search
-	std::unordered_map<int, int> distance;
+	std::unordered_map<int, int> distance; // For non-weighted
 	std::queue<int> frontier;
 	std::unordered_map<int, int> parents;
+	std::unordered_map<int, int> cost_so_far; //For weighted
+
 	
 private:
 	int dim_;
@@ -126,7 +128,10 @@ void Graph::addWall(int i)
 	v_nodes_[i].setType(Node::Type::wall_);
 }
 
-
+void Graph::addGrass(int i)
+{
+	v_nodes_[i].setType(Node::Type::grass_);
+}
 
 //Reset graph to blank state
 void Graph::reset()
@@ -143,3 +148,9 @@ void Graph::reset()
 }
 
 
+struct WeightedGraph : Graph 
+{
+	WeightedGraph(int dim) : Graph(dim) {}
+	int cost(int in, int out) const { return Graph::operator[](out).isType(Node::Type::grass_) ? 5 : 1; }
+
+};

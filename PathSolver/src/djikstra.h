@@ -9,15 +9,17 @@
 #include "utility.h"
 
 
-void bfs_full(Graph& graph) //Returns a map containing the parents of each cell
+void DjikstraFull(WeightedGraph& graph) //Returns a map containing the parents of each cell
 {
 
 	int start = *graph.start_index();
 
 	//Initialise
 	graph.frontier.push(start);
-	graph.parents[start] = start;
+	graph.parents[start] = -1;
 	graph.distance[start] = 0;
+
+	//Frontier contains vertices who's neighbours haven't yet been examined
 
 
 	//Assumes a valid start exists
@@ -31,7 +33,7 @@ void bfs_full(Graph& graph) //Returns a map containing the parents of each cell
 		graph[curr].Visited();
 
 		if (graph[curr].isType(Node::Type::end_)) return; //Early stop 
-	
+
 
 		for (int i : graph.get_neighbours(curr))
 		{
@@ -95,7 +97,7 @@ int bfs_step(Graph& graph)
 }
 
 
-void draw_path(Graph& graph)
+void draw_path(WeightedGraph& graph)
 {
 	//Assumes the graph has a start and end
 	int start = *graph.start_index();
@@ -112,15 +114,15 @@ void draw_path(Graph& graph)
 	int curr = end;
 	int dist = 0;
 
-	while (graph.parents[curr] !=start)
+	while (graph.parents[curr] >= 0)
 	{
 		int p = graph.parents[curr];
 		graph[p].setType(Node::Type::path_);
 		curr = p;
 		++dist;
+		dist += graph.cost(o)
 	}
 	std::cout << "Path found with manhatten distance = " << dist << '\n';
 	graph[start].setType(Node::Type::start_); //Re-color
 	graph[end].setType(Node::Type::end_); //Re-color
 }
-

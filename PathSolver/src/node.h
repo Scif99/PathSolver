@@ -21,6 +21,7 @@ public:
 		start_,
 		end_,
 		path_,
+		grass_,
 	};
 
 	Node(float x, float y, float w_size, int dim); //Constructor takes an x position, y position, the size of the window, and the dimensions of the grid
@@ -84,6 +85,13 @@ void Node::setType(Type t)
 		{
 			if (type_ != Type::start_ && type_ != Type::end_) { rect_.setFillColor(sf::Color::Yellow); } //Don't change color of start or end nodes
 			type_ = Type::path_;
+			break;
+		}
+
+		case Type::grass_:
+		{
+			if (type_ != Type::start_ && type_ != Type::end_) { rect_.setFillColor(sf::Color::Green); } //Don't change color of start or end nodes
+			type_ = Type::grass_;
 			break;
 		}
 	}
