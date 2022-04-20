@@ -18,6 +18,11 @@
 
 */
 
+/*
+- Really in Djikstra, all distances are set to infinity initially
+- This takes up a lot of space
+*/
+
 
 
 void DjikstraFull(DjikstraGraph& dgraph) //Returns a map containing the parents of each cell
@@ -39,24 +44,27 @@ void DjikstraFull(DjikstraGraph& dgraph) //Returns a map containing the parents 
 	//Assumes a valid start exists
 	dgraph[start].setSeen();
 
-	while (!graph.frontier.empty())
+	while (!frontier.empty())
 	{
 
-		int curr = front();
-		graph.frontier.pop();
-		graph[curr].Visited();
+		int curr = frontier.top();
+		frontier.pop();
+		dgraph[curr].Visited();
 
-		if (graph[curr].isType(Node::Type::end_)) return; //Early stop 
+		if (dgraph[curr].isType(Node::Type::end_)) return; //Early stop 
 
 
-		for (int i : graph.get_neighbours(curr))
+		for (int i : dgraph.get_neighbours(curr))
 		{
-			if (!graph[i].isSeen() && !graph[i].isType(Node::Type::wall_)) //Don't add walls to the frontier
+			if (dgraph[i].isType(Node::Type::wall_)) continue; //ignore walls
+
+			int new_cost = dgraph.cost_so_far[curr] + dgraph.cost(curr, i);
+			if(!dgraph.parents.contains(i) || new_cost < dgraph.cost_so_far[i])
 			{
-				graph.parents[i] = curr;
-				graph.distance[i] = graph.distance[curr] + 1;
-				graph.frontier.push(i);
-				graph[i].setSeen(); //Each node should only be processed once
+				dgraph.cost_so_far[i] = new_cost;
+				dgraph.parents[i] = curr;
+				frontier.push(i);
+				dgraph[i].setSeen(); //Each node should only be processed once
 			}
 		}
 

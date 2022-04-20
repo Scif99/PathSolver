@@ -46,10 +46,8 @@ public:
 	const_iterator cend() const { return v_nodes_.cend(); }
 
 	//Data to store information about a search
-	//std::unordered_map<int, int> distance; // For non-weighted
-	//std::queue<int> frontier;
 	std::unordered_map<int, int> parents;
-	//std::unordered_map<int, int> cost_so_far;
+
 	
 private:
 	int dim_;
@@ -182,10 +180,7 @@ struct Astar : Graph
 	int distance_to(int i) { return cost_so_far[i]; }
 	//double heuristic(int a, int b) const {return std::abs() }
 	std::unordered_map<int, int> cost_so_far;
-
-
-
-
+	//std::priorityqueue
 };
 
 
@@ -197,17 +192,16 @@ void draw_path(Graph& graph)
 	int end = *graph.end_index();
 
 	//Check if a path exists
-	auto has_end = [&](std::pair<int, int> p) {return p.first == end; }; //Lambda to check if the end node is contained
-	if (std::find_if(graph.parents.begin(), graph.parents.end(), has_end) == graph.parents.end())
+	if (!graph.parents.contains(end))
 	{
 		std::cout << "No path exists\n";
 		return;
 	}
 
 	int curr = end;
-
 	while (graph.parents[curr] != start)
 	{
+		std::cout << "...\n";
 		int p = graph.parents[curr];
 		graph[p].setType(Node::Type::path_);
 		curr = p;
