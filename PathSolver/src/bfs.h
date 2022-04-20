@@ -28,7 +28,7 @@ void bfs_full(Graph& graph) //Returns a map containing the parents of each cell
 
 		int curr = graph.frontier.front();
 		graph.frontier.pop();
-		graph[curr].setVisited();
+		graph[curr].Visited();
 
 		if (graph[curr].isType(Node::Type::end_)) return; //Early stop 
 	
@@ -53,7 +53,7 @@ void bfs_full(Graph& graph) //Returns a map containing the parents of each cell
 //Returns the index of the node that is next in the queue after the current one
 int bfs_step(Graph& graph)
 {
-	//If the frontier is empty then we know a path cannot exist, but this case explicitely handled by the draw_path 
+	//If the frontier is empty then we know a path cannot exist, but this case explicitly handled by the draw_path 
 	if (graph.frontier.empty())
 	{
 		//If frontier is empty and start has been explored, then no path must exist
@@ -72,7 +72,7 @@ int bfs_step(Graph& graph)
 	graph.frontier.pop();
 	std::cout << "Exploring " << curr << '\n';
 
-	graph[curr].setVisited();
+	graph[curr].Visited();
 
 	if (graph[curr].isType(Node::Type::end_))
 	{
@@ -87,8 +87,7 @@ int bfs_step(Graph& graph)
 			graph.parents[i] = curr;
 			graph.distance[i] = graph.distance[curr] + 1;
 			graph.frontier.push(i);
-			graph[i].setSeen(); 
-
+			graph[i].setSeen();
 		}
 	}
 

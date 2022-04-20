@@ -21,7 +21,6 @@ public:
 		start_,
 		end_,
 		path_,
-		grass_,
 	};
 
 	Node(float x, float y, float w_size, int dim); //Constructor takes an x position, y position, the size of the window, and the dimensions of the grid
@@ -33,9 +32,7 @@ public:
 	void setSeen();
 	bool isSeen() const { return seen_; }
 
-	void setVisited(); //Simply adds color to a Node (except if the Node is the start/end)
-
-	int cost() const { return type_ == Type::grass_ ? 5 : 1; } //Returns the cost (weight) of a node
+	void Visited(); //Simply adds color to a Node (except if the Node is the start/end)
 
 	void reset();
 private:
@@ -89,13 +86,6 @@ void Node::setType(Type t)
 			type_ = Type::path_;
 			break;
 		}
-
-		case Type::grass_:
-		{
-			rect_.setFillColor(sf::Color::Green);
-			type_ = Type::grass_;
-			break;
-		}
 	}
 }
 
@@ -107,10 +97,11 @@ void Node::setSeen()
 }
 
 //Change color to indicate that a Node has been processed in a search
-void Node::setVisited()
+void Node::Visited()
 {
 	if (type_ != Type::start_ && type_ != Type::end_) { rect_.setFillColor(sf::Color::Magenta); }  //Only change color if node isn't start or end
 }
+
 
 void Node::reset()
 {
