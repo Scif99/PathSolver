@@ -16,15 +16,11 @@ void AstarFull(AstarGraph& agraph) //Returns a map containing the parents of eac
 	int start = *agraph.start_index();
 	int end = *agraph.end_index();
 
-
 	//Create the priority queue
 	auto cmp = [&agraph](int a, int b) {return agraph.priority[a] > agraph.priority[b]; };
 	std::priority_queue<int, std::vector<int>, decltype(cmp)> frontier(cmp);
 
 	agraph.priority[start] = agraph.heuristic(start, end);
-
-	//Initialise
-	//dgraph.pq.push(start);
 	frontier.push(start);
 	agraph.parents[start] = start;
 	agraph.cost_so_far[start] = 0;
@@ -35,13 +31,11 @@ void AstarFull(AstarGraph& agraph) //Returns a map containing the parents of eac
 
 	while (!frontier.empty())
 	{
-
 		int curr = frontier.top();
 		frontier.pop();
 		agraph[curr].Visited();
 
 		if (agraph[curr].isType(Node::Type::end_)) return; //Early stop 
-
 
 		for (int next : agraph.get_neighbours(curr))
 		{

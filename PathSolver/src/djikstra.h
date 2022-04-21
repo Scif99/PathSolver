@@ -28,14 +28,12 @@ void DjikstraFull(DjikstraGraph& dgraph) //Returns a map containing the parents 
 	auto cmp = [&dgraph](int a, int b) {return dgraph.cost_so_far[a] > dgraph.cost_so_far[b]; };
 	std::priority_queue<int, std::vector<int>, decltype(cmp)> frontier(cmp);
 
-	//Initialise
-	//dgraph.pq.push(start);
+
 	frontier.push(start);
 	dgraph.parents[start] = start;
 	dgraph.cost_so_far[start] = 0;
 
 	//Frontier contains vertices who's neighbours haven't yet been examined
-	//Assumes a valid start exists
 	dgraph[start].setSeen();
 
 	while (!frontier.empty())
@@ -51,7 +49,6 @@ void DjikstraFull(DjikstraGraph& dgraph) //Returns a map containing the parents 
 		for (int next : dgraph.get_neighbours(curr))
 		{
 			if (dgraph[next].isType(Node::Type::wall_)) continue; //ignore walls
-
 			int new_cost = dgraph.cost_so_far[curr] + dgraph.cost(curr, next);
 			if(!dgraph.parents.contains(next) || new_cost < dgraph.cost_so_far[next]) //Add if not seen before or we found a cheaper path
 			{

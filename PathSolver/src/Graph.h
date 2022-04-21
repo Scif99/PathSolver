@@ -148,7 +148,6 @@ Different specialisations of Graph, each for a different algorithm.
 struct BFSGraph : Graph
 {
 	BFSGraph(int dim): Graph(dim) {}
-
 	int distance_to(int i) { return distance[i]; }
 	void reset() override;
 	std::unordered_map<int, int> distance; // For non-weighted
@@ -180,12 +179,31 @@ void DjikstraGraph::reset()
  //Reset priority queue
 }
 
+struct GreedyBFS : Graph
+{
+	GreedyBFS(int dim) : Graph(dim) {}
+	int cost(int in, int out) const { return Graph::operator[](out).isType(Node::Type::grass_) ? 5 : 1; }
+	//int distance_to(int i) { return cost_so_far[i]; }
+	int heuristic(int a, int b) const { return std::abs((a % dim()) - (b % dim())) + (std::abs(a - b) / dim()); } //xdiff + ydiff
+	void reset() override;
+	std::unordered_map<int, int> priority;
+	//std::priorityqueue
+};
+
+void GreedyBFS::reset()
+{
+	Graph::reset();
+	priority = {};
+	//Reset priority queue
+}
+
+
 struct AstarGraph : Graph 
 {
 	AstarGraph(int dim) : Graph(dim) {}
 	int cost(int in, int out) const { return Graph::operator[](out).isType(Node::Type::grass_) ? 5 : 1; }
 	int distance_to(int i) { return cost_so_far[i]; }
-	int heuristic(int a, int b) { return std::abs((a % dim()) - (b % dim())) + std::abs((a - b) % dim()); } // return xdiff + ydiff
+	int heuristic(int a, int b) const { return std::abs((a % dim()) - (b % dim())) + (std::abs(a - b) / dim());} //xdiff + ydiff
 	void reset() override;
 	std::unordered_map<int, int> cost_so_far;
 	std::unordered_map<int, int> priority;
@@ -200,31 +218,6 @@ void AstarGraph::reset()
 	//Reset priority queue
 }
 
-struct GreedyBFS : Graph
-{
-	GreedyBFS(int dim) : Graph(dim) {}
-	int cost(int in, int out) const { return Graph::operator[](out).isType(Node::Type::grass_) ? 5 : 1; }
-	//int distance_to(int i) { return cost_so_far[i]; }
-	int heuristic(int a, int b) const ;  // return xdiff + ydiff
-	void reset() override;
-	//std::unordered_map<int, int> cost_so_far;
-	std::unordered_map<int, int> priority;
-	//std::priorityqueue
-};
-
-int GreedyBFS::heuristic(int a, int b) const
-{
-	int xdiff = std::abs((a % dim()) - (b % dim()));
-	int ydiff = std::abs( std::abs(a - b) / dim() );
-	return xdiff + ydiff;
-}
-
-void GreedyBFS::reset()
-{
-	Graph::reset();
-	priority = {};
-	//Reset priority queue
-}
 
 template<typename Graph>
 void draw_path(Graph& graph)

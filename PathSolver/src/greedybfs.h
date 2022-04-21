@@ -7,10 +7,8 @@
 
 void GreedyFull(GreedyBFS& ggraph) //Returns a map containing the parents of each cell
 {
-
 	int start = *ggraph.start_index();
 	int end = *ggraph.end_index();
-
 
 	//Create the priority queue
 	//Nodes with lowest priority will be at the front
@@ -28,8 +26,6 @@ void GreedyFull(GreedyBFS& ggraph) //Returns a map containing the parents of eac
 	{
 		int curr = frontier.top();
 		frontier.pop();
-		std::cout<<"Exploring "<<curr<<'\n';
-		std::cout << "Priority of " << curr << " is " << ggraph.priority[curr] << '\n';
 		ggraph[curr].Visited(); //This is just a visual change
 
 		if (ggraph[curr].isType(Node::Type::end_)) return; //Early stop 
