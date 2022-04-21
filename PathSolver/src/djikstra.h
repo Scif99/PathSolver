@@ -48,17 +48,17 @@ void DjikstraFull(DjikstraGraph& dgraph) //Returns a map containing the parents 
 		if (dgraph[curr].isType(Node::Type::end_)) return; //Early stop 
 
 
-		for (int i : dgraph.get_neighbours(curr))
+		for (int next : dgraph.get_neighbours(curr))
 		{
-			if (dgraph[i].isType(Node::Type::wall_)) continue; //ignore walls
+			if (dgraph[next].isType(Node::Type::wall_)) continue; //ignore walls
 
-			int new_cost = dgraph.cost_so_far[curr] + dgraph.cost(curr, i);
-			if(!dgraph.parents.contains(i) || new_cost < dgraph.cost_so_far[i]) //Add if not seen before or we found a cheaper path
+			int new_cost = dgraph.cost_so_far[curr] + dgraph.cost(curr, next);
+			if(!dgraph.parents.contains(next) || new_cost < dgraph.cost_so_far[next]) //Add if not seen before or we found a cheaper path
 			{
-				dgraph.cost_so_far[i] = new_cost;
-				dgraph.parents[i] = curr;
-				frontier.push(i);
-				dgraph[i].setSeen(); //Each node should only be processed once
+				dgraph.cost_so_far[next] = new_cost;
+				dgraph.parents[next] = curr;
+				frontier.push(next);
+				dgraph[next].setSeen(); //Each node should only be processed once
 			}
 		}
 

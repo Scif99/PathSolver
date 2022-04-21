@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClInclude Include="src\astar.h" />
     <ClInclude Include="src\djikstra.h" />
+    <ClInclude Include="src\greedybfs.h" />
     <ClInclude Include="src\node.h" />
     <ClInclude Include="src\node.cpp" />
     <ClInclude Include="src\bfs.h" />

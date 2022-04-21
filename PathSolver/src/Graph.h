@@ -155,7 +155,6 @@ struct BFSGraph : Graph
 	std::queue<int> frontier; //BFS uses a queue
 };
 
-
 void BFSGraph::reset()
 {
 	Graph::reset();
@@ -174,9 +173,6 @@ struct DjikstraGraph : Graph
 	//std::priority_queue<int, std::vector<int>, decltype([&](int a, int b) {return cost_so_far[a] >cost_so_far[b]; }> frontier;
 };
 
-
-
-
 void DjikstraGraph::reset()
 {
 	Graph::reset();
@@ -190,11 +186,45 @@ struct AstarGraph : Graph
 	int cost(int in, int out) const { return Graph::operator[](out).isType(Node::Type::grass_) ? 5 : 1; }
 	int distance_to(int i) { return cost_so_far[i]; }
 	int heuristic(int a, int b) { return std::abs((a % dim()) - (b % dim())) + std::abs((a - b) % dim()); } // return xdiff + ydiff
+	void reset() override;
 	std::unordered_map<int, int> cost_so_far;
+	std::unordered_map<int, int> priority;
 	//std::priorityqueue
 };
 
+void AstarGraph::reset()
+{
+	Graph::reset();
+	cost_so_far = {};
+	priority = {};
+	//Reset priority queue
+}
 
+struct GreedyBFS : Graph
+{
+	GreedyBFS(int dim) : Graph(dim) {}
+	int cost(int in, int out) const { return Graph::operator[](out).isType(Node::Type::grass_) ? 5 : 1; }
+	//int distance_to(int i) { return cost_so_far[i]; }
+	int heuristic(int a, int b) const ;  // return xdiff + ydiff
+	void reset() override;
+	//std::unordered_map<int, int> cost_so_far;
+	std::unordered_map<int, int> priority;
+	//std::priorityqueue
+};
+
+int GreedyBFS::heuristic(int a, int b) const
+{
+	int xdiff = std::abs((a % dim()) - (b % dim()));
+	int ydiff = std::abs( std::abs(a - b) / dim() );
+	return xdiff + ydiff;
+}
+
+void GreedyBFS::reset()
+{
+	Graph::reset();
+	priority = {};
+	//Reset priority queue
+}
 
 template<typename Graph>
 void draw_path(Graph& graph)
@@ -217,7 +247,7 @@ void draw_path(Graph& graph)
 		graph[p].setType(Node::Type::path_);
 		curr = p;
 	}
-	std::cout << "Path found with manhatten distance = " << graph.distance_to(end) << '\n';
+	//std::cout << "Path found with manhatten distance = " << graph.distance_to(end) << '\n';
 	graph[start].setType(Node::Type::start_); //Re-color
 	graph[end].setType(Node::Type::end_); //Re-color
 }

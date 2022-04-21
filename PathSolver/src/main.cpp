@@ -6,7 +6,7 @@
 #include "bfs.h"
 #include "djikstra.h"
 #include "astar.h"
-
+#include "greedybfs.h"
 
 int main()
 {
@@ -17,7 +17,8 @@ int main()
     constexpr int dim{ 20 };
     //BFSGraph graph(dim);
     //DjikstraGraph graph(dim);
-    AstarGraph graph(dim);
+    //AstarGraph graph(dim);
+    GreedyBFS graph(dim);
     graph.fill(w_size);
 
     bool done = false;
@@ -110,7 +111,8 @@ int main()
                             {
                                 //bfs_full(graph);
                                 //DjikstraFull(graph);
-                                AstarFull(graph);
+                                //AstarFull(graph);
+                                GreedyFull(graph);
                                 draw_path(graph);
                                 done = true;
                             }
