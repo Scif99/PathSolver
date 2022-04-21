@@ -1,13 +1,7 @@
 #pragma once
 
-#include <queue>
-#include <unordered_map>
-#include<thread>
-#include<chrono>
-
 #include "Graph.h"
-#include "utility.h"
-#include <iostream>
+
 
 /*Djikstra
 * - Generalisation of BFS to Weighted graph
@@ -59,7 +53,7 @@ void DjikstraFull(DjikstraGraph& dgraph) //Returns a map containing the parents 
 			if (dgraph[i].isType(Node::Type::wall_)) continue; //ignore walls
 
 			int new_cost = dgraph.cost_so_far[curr] + dgraph.cost(curr, i);
-			if(!dgraph.parents.contains(i) || new_cost < dgraph.cost_so_far[i])
+			if(!dgraph.parents.contains(i) || new_cost < dgraph.cost_so_far[i]) //Add if not seen before or we found a cheaper path
 			{
 				dgraph.cost_so_far[i] = new_cost;
 				dgraph.parents[i] = curr;

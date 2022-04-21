@@ -5,6 +5,7 @@
 #include "utility.h"
 #include "bfs.h"
 #include "djikstra.h"
+#include "astar.h"
 
 
 int main()
@@ -15,7 +16,8 @@ int main()
     //Setup the grid
     constexpr int dim{ 20 };
     //BFSGraph graph(dim);
-    DjikstraGraph graph(dim);
+    //DjikstraGraph graph(dim);
+    AstarGraph graph(dim);
     graph.fill(w_size);
 
     bool done = false;
@@ -40,7 +42,7 @@ int main()
             }
         }
 
-        //User can use left click to place walls
+        //User can use left click to place Grass with weight 5
         if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) //User can use left click to place walls
         {
             if (done) //If user clicks after a search, automatically reset the board
@@ -82,6 +84,7 @@ int main()
                         {
                             auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked node 
                             graph.addStart(row_no * dim + col_no);
+                            std::cout << "Placed start node at " << row_no * dim + col_no << '\n';
                         }
                     }
 
@@ -91,10 +94,11 @@ int main()
                             {
                                 auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
                                 graph.addEnd(row_no * dim + col_no);
+                                std::cout << "Placed end node at " << row_no * dim + col_no << '\n';
                             }
                     }
 
-                    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) //User can press Space to run the BFS
+                    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) //User can press Space to run the Search
                     {
                         //Force a reset if search has already been completed
                         if (done) std::cout << "press R to reset\n";
@@ -105,7 +109,8 @@ int main()
                             if (toggle_step == false) 
                             {
                                 //bfs_full(graph);
-                                DjikstraFull(graph);
+                                //DjikstraFull(graph);
+                                AstarFull(graph);
                                 draw_path(graph);
                                 done = true;
                             }

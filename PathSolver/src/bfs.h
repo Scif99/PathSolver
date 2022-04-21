@@ -1,12 +1,7 @@
 #pragma once
 
-#include <queue>
-#include <unordered_map>
-#include<thread>
-#include<chrono>
-
 #include "Graph.h"
-#include "utility.h"
+
 
 
 void bfs_full(BFSGraph& bgraph) //Returns a map containing the parents of each cell
@@ -52,10 +47,10 @@ void bfs_full(BFSGraph& bgraph) //Returns a map containing the parents of each c
 //Returns the index of the node that is next in the queue after the current one
 int bfs_step(BFSGraph& bgraph)
 {
-	//If the frontier is empty then we know a path cannot exist, but this case explicitly handled by the draw_path 
+	//If the frontier is empty then either we haven't initialised or no path exists
 	if (bgraph.frontier.empty())
 	{
-		//If frontier is empty and start has been explored, then no path must exist
+		//If frontier is empty and start has been explored, then no path exists
 		if (bgraph[*bgraph.start_index()].isSeen()) return -1;
 
 		//Otherwise it means the frontier hasn't been initialised yet, so we initialise.
@@ -73,10 +68,9 @@ int bfs_step(BFSGraph& bgraph)
 
 	bgraph[curr].Visited();
 
-	if (bgraph[curr].isType(Node::Type::end_))
-	{
-		return -1; //Return this end index
-	}
+	//Done
+	if (bgraph[curr].isType(Node::Type::end_)) return -1; 
+
 	//Assert: frontier contains ...
 
 	for (int i : bgraph.get_neighbours(curr))

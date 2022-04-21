@@ -13,7 +13,7 @@ class Graph
 {
 public:
 	Graph(int dim)
-		:dim_{ dim }, v_nodes_{ {} }, start_{  }, end_{ -1 }
+		:dim_{ dim }, v_nodes_{ {} }, start_{-1 }, end_{-1}
 	{}
 
 	int dim() const { return dim_; } //Dimensions of the graph.
@@ -168,20 +168,32 @@ struct DjikstraGraph : Graph
 	DjikstraGraph(int dim): Graph(dim) {}
 	int cost(int in, int out) const { return Graph::operator[](out).isType(Node::Type::grass_) ? 5 : 1; }
 	int distance_to(int i) { return cost_so_far[i]; }
+	void reset() override;
 	std::unordered_map<int, int> cost_so_far;
-	//std::priority_queue
+
+	//std::priority_queue<int, std::vector<int>, decltype([&](int a, int b) {return cost_so_far[a] >cost_so_far[b]; }> frontier;
 };
 
 
-struct Astar : Graph 
+
+
+void DjikstraGraph::reset()
 {
-	Astar(int dim) : Graph(dim) {}
+	Graph::reset();
+	cost_so_far = {};
+ //Reset priority queue
+}
+
+struct AstarGraph : Graph 
+{
+	AstarGraph(int dim) : Graph(dim) {}
 	int cost(int in, int out) const { return Graph::operator[](out).isType(Node::Type::grass_) ? 5 : 1; }
 	int distance_to(int i) { return cost_so_far[i]; }
-	//double heuristic(int a, int b) const {return std::abs() }
+	int heuristic(int a, int b) { return std::abs((a % dim()) - (b % dim())) + std::abs((a - b) % dim()); } // return xdiff + ydiff
 	std::unordered_map<int, int> cost_so_far;
 	//std::priorityqueue
 };
+
 
 
 template<typename Graph>
@@ -201,7 +213,6 @@ void draw_path(Graph& graph)
 	int curr = end;
 	while (graph.parents[curr] != start)
 	{
-		std::cout << "...\n";
 		int p = graph.parents[curr];
 		graph[p].setType(Node::Type::path_);
 		curr = p;

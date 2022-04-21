@@ -151,6 +151,7 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\astar.h" />
     <ClInclude Include="src\djikstra.h" />
     <ClInclude Include="src\node.h" />
     <ClInclude Include="src\node.cpp" />

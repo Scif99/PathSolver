@@ -41,5 +41,8 @@
     <ClInclude Include="src\djikstra.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\astar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
