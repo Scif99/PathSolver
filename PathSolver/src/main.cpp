@@ -22,14 +22,15 @@ int main()
     //GreedyBFS graph(dim);
     graph.fill(w_size);
 
-    bool done = false;
-    bool toggle_step = false;
+    bool done = false; //Has a search been completed?
+    bool toggle_step = false; //Flag to toggle between step/full mode
+    bool stepping = false; //Is the algo running in real time
 
     //Game Loop
     while (window.isOpen())
     {
         //If in step mode
-        if(toggle_step && !done)
+        if(stepping && !done)
         {
             int next = bfs_step(graph);
             std::this_thread::sleep_for(std::chrono::milliseconds(20));
@@ -163,7 +164,9 @@ int main()
                     //User can press T to toggle between step and full modes
                     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::T))
                     {
-                        printToggled(toggle_step, std::cout);
+                        toggle_step = !toggle_step;
+                        std::string mode = toggle_step ? "Step " : "Full ";
+                        std::cout << "Switched to " << mode << " mode\n";
                         //done = true;
                     }
 
