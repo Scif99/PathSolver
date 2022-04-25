@@ -31,8 +31,9 @@ void AstarFull(AstarGraph& agraph) //Returns a map containing the parents of eac
 
 	while (!frontier.empty())
 	{
-		int curr = frontier.top();
+		int curr = frontier.top(); 
 		frontier.pop();
+
 		agraph[curr].Visited();
 
 		if (agraph[curr].isType(Node::Type::end_)) return; //Early stop 

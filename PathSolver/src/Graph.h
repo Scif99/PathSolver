@@ -7,6 +7,7 @@
 #include <iterator>
 #include <optional>
 #include <cstdlib>
+#include <iostream>
 
 
 class Graph 
@@ -24,7 +25,6 @@ public:
 	//Accessors
 	const Node& operator[](int i) const  { return v_nodes_[i]; }
 	Node& operator[](int i) { return v_nodes_[i]; }
-
 
 	std::optional<int> start_index() const; 
 	void addStart(int i);
@@ -83,8 +83,7 @@ std::vector<int> Graph::get_neighbours(int index)
 
 }
 
-//Set the node with given index as the end node
-//Handles reseting the old start
+//Set the node with given index as the start node, resetting the old one if necessary
 void Graph::addStart(int i)
 {
 	if (start_ >= 0) v_nodes_[start_].reset(); //Reset the previous start node
@@ -99,8 +98,7 @@ std::optional<int> Graph::start_index() const
 	else return std::nullopt;
 }
 
-//Set the node with given index as the end node
-//Handles reseting the old end
+//Set the node with given index as the end node, resetting the old one if necessary
 void Graph::addEnd(int i)
 {
 	if (end_ >= 0) v_nodes_[end_].reset(); //Reset the previous start node
@@ -131,14 +129,17 @@ void Graph::addGrass(int i)
 //Reset graph to blank state
 void Graph::reset()
 {
-	for (int i = 0; i < size(); ++i)
+	int sz = v_nodes_.size();
+	for (int i = 0; i < sz; ++i)
 	{
 		v_nodes_[i].reset();
 	}
 	parents = {};
+
+	//Reset the start and end indices
+	start_ = -1;
+	end_ = -1;
 }
-
-
 
 /*
 Different specialisations of Graph, each for a different algorithm.
@@ -219,7 +220,7 @@ void AstarGraph::reset()
 }
 
 
-template<typename Graph>
+
 void draw_path(Graph& graph)
 {
 	//Assumes the graph has a start and end
