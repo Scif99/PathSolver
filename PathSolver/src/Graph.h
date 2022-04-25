@@ -14,7 +14,7 @@ class Graph
 {
 public:
 	Graph(int dim)
-		:dim_{ dim }, v_nodes_{ {} }, start_{-1 }, end_{-1}
+		:dim_{ dim }, v_nodes_{ {} }, start_{std::nullopt}, end_{ std::nullopt }
 	{}
 
 	int dim() const { return dim_; } //Dimensions of the graph.
@@ -52,8 +52,8 @@ public:
 private:
 	int dim_;
 	std::vector<Node> v_nodes_;
-	int start_;
-	int end_;
+	std::optional<int> start_; //Using optionals rather than using -1 as null
+	std::optional<int> end_;
 };
 
 //Fill the graph up with nodes
@@ -86,7 +86,7 @@ std::vector<int> Graph::get_neighbours(int index)
 //Set the node with given index as the start node, resetting the old one if necessary
 void Graph::addStart(int i)
 {
-	if (start_ >= 0) v_nodes_[start_].reset(); //Reset the previous start node
+	if (start_) v_nodes_[start_.value()].reset(); //Reset the previous start node
 	v_nodes_[i].setType(Node::Type::start_);
 	start_ = i;
 }
@@ -94,14 +94,14 @@ void Graph::addStart(int i)
 //Returns an optional start index
 std::optional<int> Graph::start_index() const
 {
-	if (start_ > -1) return start_;
+	if (start_) return start_.value();
 	else return std::nullopt;
 }
 
 //Set the node with given index as the end node, resetting the old one if necessary
 void Graph::addEnd(int i)
 {
-	if (end_ >= 0) v_nodes_[end_].reset(); //Reset the previous start node
+	if (end_) v_nodes_[end_.value()].reset(); //Reset the previous start node
 	v_nodes_[i].setType(Node::Type::end_);
 	end_ = i;
 }
@@ -109,7 +109,7 @@ void Graph::addEnd(int i)
 //Returns an optional end index
 std::optional<int> Graph::end_index() const
 {
-	if (end_ > -1) return end_;
+	if (end_) return end_.value();
 	else return std::nullopt;
 }
 

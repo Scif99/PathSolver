@@ -128,36 +128,36 @@ int main()
                             }
                     }
 
-                    //user can press space to run the full search
+                    //User can press space to run the full search.
                     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) 
                     {
-                        //force a reset if search has already been completed
-                        if (done) std::cout << "press r to reset\n";
-                        
-                        else if (!graph.start_index() || !graph.end_index()) std::cout << "please place a start and end location before searching\n";
-                        else
-                        { 
-                            if (!toggle_step)
-                            {
-                                bfs_full(graph);
-                                //djikstrafull(graph);
-                                //astarfull(graph);
-                                //greedyfull(graph);
-                                draw_path(graph);
-                                done = true;
-                            }
-                            else
-                            {
-                                stepping = true;
-                                //int next = bfs_step(graph); //Get index of next node to be processed
-                                //if (next == -1) //Search is complete
-                                //{
-                                //    draw_path(graph);
-                                //    done = true;
-                                //}
-                            }
+                        //Force a reset if search has already been completed.
+                        if (done)
+                        {
+                            std::cout << "Search already completed. Press r to reset\n";
+                            break;
                         }
-                        
+                        //Prompt user if they haven't placed a start and end.
+                        if (!graph.start_index() || !graph.end_index()) 
+                        {
+                            std::cout << "please place a start and end location before searching\n";
+                            break;
+                        }
+                        //Run the search, depending on whether user is in full or step mode.
+                        if (!toggle_step)
+                        {
+                            bfs_full(graph);
+                            //djikstrafull(graph);
+                            //astarfull(graph);
+                            //greedyfull(graph);
+                            draw_path(graph);
+
+                            done = true; //Flag that the search has been completed.
+                        }
+                        else
+                        {
+                            stepping = true; //The algorithm should now run step-by-step 
+                        }
                     }
 
                     //User can press T to toggle between step and full modes
@@ -166,16 +166,14 @@ int main()
                         toggle_step = !toggle_step;
                         std::string mode = toggle_step ? "Step " : "Full ";
                         std::cout << "Switched to " << mode << " mode\n";
-                        //done = true;
                     }
 
-                    //User can manually exit by pressing escape
-                    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-                    {
-                        window.close();
-                        break;
-                    }
-
+                    ////User can manually exit by pressing escape
+                    //else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+                    //{
+                    //    window.close();
+                    //    break;
+                    //}
                     break;
                 }
 
