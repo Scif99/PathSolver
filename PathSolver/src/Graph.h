@@ -136,9 +136,9 @@ void Graph::reset()
 	}
 	parents = {};
 
-	//Reset the start and end indices
-	start_ = -1;
-	end_ = -1;
+	//Reset the start and end indices to null
+	start_ = std::nullopt;
+	end_ = std::nullopt;
 }
 
 /*
