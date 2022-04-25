@@ -30,6 +30,7 @@ int main()
     while (window.isOpen())
     {
         //If in step mode
+        //TO-DO stepping should block everything else?
         if(stepping && !done)
         {
             int next = bfs_step(graph);
@@ -38,11 +39,12 @@ int main()
             {
                 draw_path(graph);
                 done = true;
+                stepping = false;
             }
         }
 
         //User can use left click to place walls
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) //User can use left click to place walls
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !stepping) //User can use left click to place walls
         {
             if (done) //If user clicks after a search, automatically reset the board
             {
@@ -57,7 +59,7 @@ int main()
         }
 
         //User can use left click to place Grass with weight 5 (only makes a difference for 'weighted' algorithms)
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) 
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && !stepping) 
         {
             if (done) //If user clicks after a search, automatically reset the board
             {
@@ -86,11 +88,12 @@ int main()
 
                 case sf::Event::KeyPressed:
                 {
-                    //User can Press R to reset the grid
+                    //User can Press R to manually reset the grid to a clean slate
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
                     {
                         graph.reset();
                         done = false;
+                        stepping = false;
                     }
 
                     //User can press 1 to change the start location to mouse position
@@ -145,20 +148,16 @@ int main()
                             }
                             else
                             {
-                                int next = bfs_step(graph); //Get index of next node to be processed
-                                if (next == -1) //Search is complete
-                                {
-                                    draw_path(graph);
-                                    done = true;
-                                }
+                                stepping = true;
+                                //int next = bfs_step(graph); //Get index of next node to be processed
+                                //if (next == -1) //Search is complete
+                                //{
+                                //    draw_path(graph);
+                                //    done = true;
+                                //}
                             }
                         }
                         
-                    }
-
-                    //User can press s to run the search step-by-step
-                    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-                    {
                     }
 
                     //User can press T to toggle between step and full modes
@@ -168,6 +167,13 @@ int main()
                         std::string mode = toggle_step ? "Step " : "Full ";
                         std::cout << "Switched to " << mode << " mode\n";
                         //done = true;
+                    }
+
+                    //User can manually exit by pressing escape
+                    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+                    {
+                        window.close();
+                        break;
                     }
 
                     break;

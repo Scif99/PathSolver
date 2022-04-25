@@ -64,7 +64,6 @@ int bfs_step(BFSGraph& bgraph)
 
 	int curr = bgraph.frontier.front(); //Note that the frontier will always be non
 	bgraph.frontier.pop();
-	std::cout << "Exploring " << curr << '\n';
 
 	bgraph[curr].Visited();
 
