@@ -1,13 +1,16 @@
+
 #include <SFML/Graphics.hpp>
 #include <chrono>
-#include<thread>
+#include <thread>
 
-#include "graph.h"
-#include "utility.h"
+#include "node.h"
+#include "Graph.h"
 #include "bfs.h"
-#include "djikstra.h"
-#include "astar.h"
-#include "greedybfs.h"
+#include "utility.h"
+
+//#include "djikstra.h"
+//#include "astar.h"
+//#include "greedybfs.h"
 
 int main()
 {
@@ -16,11 +19,11 @@ int main()
 
     //Setup the grid
     constexpr int dim{ 20 }; //Number of rows/columns
-    BFSGraph graph(dim);
+    BFSGraph graph(dim); //Construct an empty graph
     //DjikstraGraph graph(dim);
     //AstarGraph graph(dim);
     //GreedyBFS graph(dim);
-    graph.fill(w_size);
+    graph.fill(w_size); //Fill the graph with nodes (cells)
 
     bool done = false; //Has a search been completed?
     bool toggle_step = false; //Flag to toggle between step/full mode
@@ -31,17 +34,18 @@ int main()
     {
         //If in step mode
         //TO-DO stepping should block everything else?
-        if(stepping && !done)
-        {
-            int next = bfs_step(graph);
-            std::this_thread::sleep_for(std::chrono::milliseconds(20));
-            if (next == -1)
-            {
-                draw_path(graph);
-                done = true;
-                stepping = false;
-            }
-        }
+        //if(stepping && !done)
+        //{
+        //    //int next = StepBFS(graph);
+        //    int next = StepDjikstra;
+        //    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+        //    if (next == -1)
+        //    {
+        //        DrawPath(graph);
+        //        done = true;
+        //        stepping = false;
+        //    }
+        //}
 
         //User can use left click to place walls
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !stepping) //User can use left click to place walls
@@ -58,7 +62,7 @@ int main()
             }
         }
 
-        //User can use left click to place Grass with weight 5 (only makes a difference for 'weighted' algorithms)
+        //User can use left click to place Grass with weight 5 (note this makes no difference for BFS)
         if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && !stepping) 
         {
             if (done) //If user clicks after a search, automatically reset the board
@@ -80,6 +84,7 @@ int main()
         {
             switch (evnt.type)
             {
+                //Close window
                 case  sf::Event::Closed:
                 {
                     window.close();
@@ -146,11 +151,11 @@ int main()
                         //Run the search, depending on whether user is in full or step mode.
                         if (!toggle_step)
                         {
-                            bfs_full(graph);
-                            //djikstrafull(graph);
+                            CompleteBFS(graph);
+                            //CompleteDjikstra(graph);
                             //astarfull(graph);
                             //greedyfull(graph);
-                            draw_path(graph);
+                            DrawPath(graph);
 
                             done = true; //Flag that the search has been completed.
                         }

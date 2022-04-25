@@ -24,11 +24,4 @@ std::pair<int, int> getCoords(const sf::Window& win, int win_size, int grid_dim)
 	return { row_no,col_no };
 }
 
-//Prints message to console indicating a switch of modes
-void printToggled(bool& toggle, std::ostream& os)
-{
-	toggle = !toggle;
-	std::string mode = toggle ? "Step " : "Full ";
-	os << "Switched to " << mode << " mode\n";
-}
 

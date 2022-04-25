@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Graph.h"
+#include "node.h"
+
 
 /* A* (A-star)
 * - Very similar to 
@@ -10,49 +12,15 @@
 - It is the best of both worlds between Djikstra and Greedy best first search
 */
 
-void AstarFull(AstarGraph& agraph) //Returns a map containing the parents of each cell
+struct AstarGraph : Graph
 {
+	AstarGraph(int dim) : Graph(dim) {}
+	int distance_to(int i) { return cost_so_far[i]; }
+	int heuristic(int a, int b) const { return std::abs((a % dim()) - (b % dim())) + (std::abs(a - b) / dim()); } //xdiff + ydiff
+	void reset() override;
+	std::unordered_map<int, int> cost_so_far;
+	std::unordered_map<int, int> priority;
+	//std::priorityqueue
+};
 
-	int start = *agraph.start_index();
-	int end = *agraph.end_index();
-
-	//Create the priority queue
-	auto cmp = [&agraph](int a, int b) {return agraph.priority[a] > agraph.priority[b]; };
-	std::priority_queue<int, std::vector<int>, decltype(cmp)> frontier(cmp);
-
-	agraph.priority[start] = agraph.heuristic(start, end);
-	frontier.push(start);
-	agraph.parents[start] = start;
-	agraph.cost_so_far[start] = 0;
-
-	//Frontier contains vertices who's neighbours haven't yet been examined
-	//Assumes a valid start exists
-	agraph[start].setSeen();
-
-	while (!frontier.empty())
-	{
-		int curr = frontier.top(); 
-		frontier.pop();
-
-		agraph[curr].Visited();
-
-		if (agraph[curr].isType(Node::Type::end_)) return; //Early stop 
-
-		for (int next : agraph.get_neighbours(curr))
-		{
-			if (agraph[next].isType(Node::Type::wall_)) continue; //ignore walls
-
-			int new_cost = agraph.cost_so_far[curr] + agraph.cost(curr, next);
-			if (!agraph.parents.contains(next) || new_cost < agraph.cost_so_far[next]) //Add if not seen before or we found a cheaper path
-			{
-				agraph.cost_so_far[next] = new_cost; //Update cost
-				agraph.parents[next] = curr;
-				agraph.priority[next] = new_cost + agraph.heuristic(next, end);
-				frontier.push(next);
-				agraph[next].setSeen(); //Each node should only be processed once
-			}
-		}
-
-	}
-	return;
-}
+void AstarFull(AstarGraph& agraph);

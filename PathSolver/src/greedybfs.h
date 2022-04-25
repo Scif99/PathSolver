@@ -2,45 +2,14 @@
 
 #include "Graph.h"
 
-
-
-
-void GreedyFull(GreedyBFS& ggraph) //Returns a map containing the parents of each cell
+struct GreedyBFS : Graph
 {
-	int start = *ggraph.start_index();
-	int end = *ggraph.end_index();
+	GreedyBFS(int dim) : Graph(dim) {}
+	//int distance_to(int i) { return cost_so_far[i]; }
+	int heuristic(int a, int b) const { return std::abs((a % dim()) - (b % dim())) + (std::abs(a - b) / dim()); } //xdiff + ydiff
+	void reset() override;
+	std::unordered_map<int, int> priority;
+	//std::priorityqueue
+};
 
-	//Create the priority queue
-	//Nodes with lowest priority will be at the front
-	auto cmp = [&ggraph](int a, int b) {return ggraph.priority[a] > ggraph.priority[b]; };
-	std::priority_queue<int, std::vector<int>, decltype(cmp)> frontier(cmp);
-
-	ggraph.priority[start] = ggraph.heuristic(start, end);
-	frontier.push(start);
-	ggraph.parents[start] = start;
-
-
-	//ggraph[start].setSeen();
-
-	while (!frontier.empty())
-	{
-		int curr = frontier.top();
-		frontier.pop();
-		ggraph[curr].Visited(); //This is just a visual change
-
-		if (ggraph[curr].isType(Node::Type::end_)) return; //Early stop 
-
-		for (int next : ggraph.get_neighbours(curr))
-		{
-			if (!ggraph.parents.contains(next) && !ggraph[next].isType(Node::Type::wall_))
-			{
-				ggraph.parents[next] = curr;
-				ggraph.priority[next] = ggraph.heuristic(next, end);
-				frontier.push(next);
-				ggraph[next].setSeen(); //Each node should only be processed once
-			}
-		}
-
-	}
-	return;
-}
+void GreedyFull(GreedyBFS& ggraph);

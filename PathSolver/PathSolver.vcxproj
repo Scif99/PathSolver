@@ -147,7 +147,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\astar.cpp" />
+    <ClCompile Include="src\bfs.cpp" />
+    <ClCompile Include="src\djikstra.cpp" />
     <ClCompile Include="src\Graph.cpp" />
+    <ClCompile Include="src\greedybfs.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
