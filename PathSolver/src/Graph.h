@@ -24,6 +24,7 @@ public:
 	Graph(int dim)
 		:dim_{ dim }, v_nodes_{ {} }, start_{std::nullopt}, end_{ std::nullopt }
 	{}
+	virtual ~Graph() = default;
 	void fill(int w_size); //Fill an empty graph with nodes
 
 	int dim() const { return dim_; } //Dimensions of the graph.
@@ -48,9 +49,10 @@ public:
 	int cost(int in, int out) const { return v_nodes_[out].isType(Node::Type::grass_) ? 5 : 1; } //Returns the cost of an edge
 	virtual void reset(); //Reset graph to a blank one
 
+	//Ideally want this to be pure virtual...
+	virtual int step() { return -1; };
+	virtual void run() {};
 
-	virtual void run() = 0;
-	virtual int step() = 0;
 	void drawPath();
 
 	//Iterators
@@ -81,8 +83,9 @@ private:
 struct BFSGraph : Graph
 {
 	BFSGraph(int dim) : Graph(dim) {}
+	virtual ~BFSGraph() = default;
 	int distance_to(int i) { return distance[i]; }
-	void reset() override;
+	virtual void reset() override;
 	void run() override;
 	int step() override;
 	std::unordered_map<int, int> distance; // For non-weighted
@@ -97,8 +100,8 @@ struct DjikstraGraph : Graph
 {
 	DjikstraGraph(int dim) : Graph(dim) {}
 	int distance_to(int i) { return cost_so_far[i]; }
-	void reset() override;
-	void run() override;
+	virtual void reset() override;
+	void run()override;
 	int step() override;
 	std::unordered_map<int, int> cost_so_far;
 	std::priority_queue < std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater <std::pair<int, int>>> PQ; //(cost_so_far, index)
@@ -113,7 +116,7 @@ struct GreedyGraph : Graph
 	GreedyGraph(int dim) : Graph(dim) {}
 	//int distance_to(int i) { return cost_so_far[i]; }
 	int heuristic(int a, int b) const { return std::abs((a % dim()) - (b % dim())) + (std::abs(a - b) / dim()); } //xdiff + ydiff
-	void reset() override;
+	virtual void reset() override;
 	void run() override;
 	int step() override;
 	std::unordered_map<int, int> priority;
@@ -129,7 +132,7 @@ struct AstarGraph : Graph
 	AstarGraph(int dim) : Graph(dim) {}
 	int distance_to(int i) { return cost_so_far[i]; }
 	int heuristic(int a, int b) const { return std::abs((a % dim()) - (b % dim())) + (std::abs(a - b) / dim()); } //xdiff + ydiff
-	void reset() override;
+	virtual void reset() override;
 	void run() override;
 	int step() override;
 	std::unordered_map<int, int> cost_so_far;

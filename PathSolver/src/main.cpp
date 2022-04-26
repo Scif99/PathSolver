@@ -2,6 +2,7 @@
 #include <chrono>
 #include <thread>
 #include <memory>
+#include <utility>
 
 #include "graph.h"
 #include "utility.h"
@@ -13,14 +14,9 @@ int main()
 
     //Set up the grid
     constexpr auto dim{ 20 }; //Number of rows/columns
-    BFSGraph graph(dim); //Construct an empty graph
-    //DjikstraGraph graph(dim);
-    //GreedyGraph graph(dim);
-    //AstarGraph graph(dim);
 
-    //auto pgraph = std::make_unique<Graph>(GreedyGraph(dim)); 
-
-    graph.fill(w_size); //Fill the graph with nodes (cells)
+    std::unique_ptr<Graph> pgraph = std::make_unique<BFSGraph>(BFSGraph(dim));
+    pgraph->fill(w_size); //Fill the graph with nodes (cells)
 
     auto done{ false }; //Has a search been completed?
     auto toggle_step{ false }; //Are we in step mode?
@@ -32,11 +28,11 @@ int main()
         //If in step mode
         if(stepping && !done)
         {
-            int next = graph.step();
+            int next = pgraph->step();
             std::this_thread::sleep_for(std::chrono::milliseconds(10)); //Pause
             if (next == -1)
             {
-                graph.drawPath();
+                pgraph->drawPath();
                 done = true;
                 stepping = false;
             }
@@ -48,13 +44,13 @@ int main()
             //If user clicks after a search, automatically reset the board first
             if (done)
             {
-                graph.reset();
+                pgraph->reset();
                 done = false;
             }
             if (mouse_in_bounds(window,w_size))
             {
                 auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
-                graph.addWall(row_no * dim + col_no);
+                pgraph->addWall(row_no * dim + col_no);
             }
         }
 
@@ -64,16 +60,15 @@ int main()
             //If user clicks after a search, automatically reset the board first
             if (done) 
             {
-                graph.reset();
+                pgraph->reset();
                 done = false;
             }
             if (mouse_in_bounds(window, w_size))
             {
                 auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
-                graph.addGrass(row_no * dim + col_no);
+                pgraph->addGrass(row_no * dim + col_no);
             }
         }
-
 
         //Process Events    
         sf::Event evnt;
@@ -93,7 +88,7 @@ int main()
                     //User can Press R to manually reset the grid to a clean slate
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
                     {
-                        graph.reset();
+                        pgraph->reset();
                         done = false;
                         stepping = false;
                     }
@@ -104,13 +99,13 @@ int main()
                         //If user clicks after a search, automatically reset the board
                         if (done) 
                         {
-                            graph.reset();
+                            pgraph->reset();
                             done = false;
                         }
                         if (mouse_in_bounds(window,w_size)) //Clamp...
                         {
                             auto [row_no, col_no] = getCoords(window, w_size, dim); 
-                            graph.addStart(row_no * dim + col_no);
+                            pgraph->addStart(row_no * dim + col_no);
                             //std::cout << "Placed start node at " << row_no * dim + col_no << '\n';
                         }
                     }
@@ -121,13 +116,13 @@ int main()
                         //If user clicks after a search, automatically reset the board
                         if (done) 
                         {
-                            graph.reset();
+                            pgraph->reset();
                             done = false;
                         }
                         if (mouse_in_bounds(window, w_size)) //Clamp...
                             {
                                 auto [row_no, col_no] = getCoords(window, w_size, dim); 
-                                graph.addEnd(row_no * dim + col_no);
+                                pgraph->addEnd(row_no * dim + col_no);
                                 //std::cout << "Placed end node at " << row_no * dim + col_no << '\n';
                             }
                     }
@@ -142,7 +137,7 @@ int main()
                             break;
                         }
                         //Prompt user if they haven't placed a start and end.
-                        if (!graph.start_index() || !graph.end_index()) 
+                        if (!pgraph->start_index() || !pgraph->end_index()) 
                         {
                             std::cout << "please place a start and end location before searching\n";
                             break;
@@ -150,8 +145,8 @@ int main()
                         //Run the search, depending on whether user is in full or step mode.
                         if (!toggle_step)
                         {
-                            graph.run();
-                            graph.drawPath();
+                            pgraph->run();
+                            pgraph->drawPath();
 
                             done = true; //Flag that the search has been completed.
                         }
@@ -169,6 +164,54 @@ int main()
                         std::cout << "Switched to " << mode << " mode\n";
                     }
 
+                    //User can press B to switch to BFS Search
+                    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::B))
+                    {
+                        pgraph->reset();
+                        done = false;
+                        stepping = false;
+                        pgraph = std::move(std::make_unique<BFSGraph>(BFSGraph(dim)));
+                        pgraph->fill(w_size);
+                        std::cout << "Switched to BFS Search\n";
+
+                    }
+
+                    //User can press D to switch to Djikstra
+                    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+                    {
+                        pgraph->reset();
+                        done = false;
+                        stepping = false;
+                        pgraph = std::move(std::make_unique<DjikstraGraph>(DjikstraGraph(dim)));
+                        pgraph->fill(w_size);
+                        std::cout << "Switched to Djikstra\n";
+
+                    }
+
+                    //User can press G to switch to Greedy Search
+                    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::G))
+                    {
+                        pgraph->reset();
+                        done = false;
+                        stepping = false;
+                        pgraph = std::move(std::make_unique<GreedyGraph>(GreedyGraph(dim)));
+                        pgraph->fill(w_size);
+                        std::cout << "Switched to Greedy Search\n";
+                    
+                    }
+
+                    //User can press G to switch to A* Search
+                    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+                    {
+                        pgraph->reset();
+                        done = false;
+                        stepping = false;
+                        pgraph = std::move(std::make_unique<AstarGraph>(AstarGraph(dim)));
+                        pgraph->fill(w_size);
+                        std::cout << "Switched to A*\n";
+
+                    }
+
                     break;
                 }
 
@@ -178,7 +221,7 @@ int main()
 
         //Draw
         window.clear(); //Clear Screen so contents from previous frame doesn't interfere with current frame
-        for (const auto& node : graph) node.draw(window, sf::RenderStates::Default);
+        for (const auto& node : *pgraph) node.draw(window, sf::RenderStates::Default);
         window.display(); //Swap buffers and display on screen
     }
 
