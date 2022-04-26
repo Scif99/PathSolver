@@ -36,7 +36,7 @@ public:
 	void reset();
 private:
 	sf::RectangleShape rect_;
-	bool seen_;
+	bool seen_; //Represents whether a node has been flagged for processing (i.e added to the priority queue)
 	Type type_;
 };
 

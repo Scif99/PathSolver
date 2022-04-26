@@ -1,4 +1,4 @@
-#include "Graph.h"
+#include "graph.h"
 
 
 //Fill the graph up with nodes

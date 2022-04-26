@@ -11,6 +11,12 @@
 #include "node.h"
 
 
+/*
+* The Graph clase is an abstract base class 
+* Any class which inherits must implement a run() and step () function.s
+
+*/
+
 
 class Graph 
 {
@@ -42,6 +48,9 @@ public:
 	int cost(int in, int out) const { return v_nodes_[out].isType(Node::Type::grass_) ? 5 : 1; } //Returns the cost of an edge
 	virtual void reset(); //Reset graph to a blank one
 
+
+	virtual void run() = 0;
+	virtual int step() = 0;
 	void drawPath();
 
 	//Iterators
@@ -74,8 +83,8 @@ struct BFSGraph : Graph
 	BFSGraph(int dim) : Graph(dim) {}
 	int distance_to(int i) { return distance[i]; }
 	void reset() override;
-	void run();
-	int step();
+	void run() override;
+	int step() override;
 	std::unordered_map<int, int> distance; // For non-weighted
 	std::queue<int> frontier; //BFS uses a queue to process nodes
 };
@@ -89,8 +98,8 @@ struct DjikstraGraph : Graph
 	DjikstraGraph(int dim) : Graph(dim) {}
 	int distance_to(int i) { return cost_so_far[i]; }
 	void reset() override;
-	void run();
-	int step();
+	void run() override;
+	int step() override;
 	std::unordered_map<int, int> cost_so_far;
 	std::priority_queue < std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater <std::pair<int, int>>> PQ; //(cost_so_far, index)
 };
@@ -104,9 +113,9 @@ struct GreedyGraph : Graph
 	GreedyGraph(int dim) : Graph(dim) {}
 	//int distance_to(int i) { return cost_so_far[i]; }
 	int heuristic(int a, int b) const { return std::abs((a % dim()) - (b % dim())) + (std::abs(a - b) / dim()); } //xdiff + ydiff
-	void run();
-	int step();
 	void reset() override;
+	void run() override;
+	int step() override;
 	std::unordered_map<int, int> priority;
 	std::priority_queue < std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater <std::pair<int, int>>> PQ; //(cost_so_far, index)
 };
@@ -120,9 +129,9 @@ struct AstarGraph : Graph
 	AstarGraph(int dim) : Graph(dim) {}
 	int distance_to(int i) { return cost_so_far[i]; }
 	int heuristic(int a, int b) const { return std::abs((a % dim()) - (b % dim())) + (std::abs(a - b) / dim()); } //xdiff + ydiff
-	void run();
-	int step();
 	void reset() override;
+	void run() override;
+	int step() override;
 	std::unordered_map<int, int> cost_so_far;
 	std::unordered_map<int, int> priority;
 	std::priority_queue < std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater <std::pair<int, int>>> PQ; //(cost_so_far, index)

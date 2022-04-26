@@ -1,9 +1,9 @@
-
 #include <SFML/Graphics.hpp>
 #include <chrono>
 #include <thread>
+#include <memory>
 
-#include "Graph.h"
+#include "graph.h"
 #include "utility.h"
 
 int main()
@@ -18,6 +18,8 @@ int main()
     //GreedyGraph graph(dim);
     //AstarGraph graph(dim);
 
+    //auto pgraph = std::make_unique<Graph>(GreedyGraph(dim)); 
+
     graph.fill(w_size); //Fill the graph with nodes (cells)
 
     auto done{ false }; //Has a search been completed?
@@ -28,7 +30,6 @@ int main()
     while (window.isOpen())
     {
         //If in step mode
-        //TO-DO stepping should block everything else?
         if(stepping && !done)
         {
             int next = graph.step();
@@ -110,7 +111,7 @@ int main()
                         {
                             auto [row_no, col_no] = getCoords(window, w_size, dim); 
                             graph.addStart(row_no * dim + col_no);
-                            std::cout << "Placed start node at " << row_no * dim + col_no << '\n';
+                            //std::cout << "Placed start node at " << row_no * dim + col_no << '\n';
                         }
                     }
 
@@ -127,7 +128,7 @@ int main()
                             {
                                 auto [row_no, col_no] = getCoords(window, w_size, dim); 
                                 graph.addEnd(row_no * dim + col_no);
-                                std::cout << "Placed end node at " << row_no * dim + col_no << '\n';
+                                //std::cout << "Placed end node at " << row_no * dim + col_no << '\n';
                             }
                     }
 
