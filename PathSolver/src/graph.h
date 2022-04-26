@@ -11,12 +11,6 @@
 #include "node.h"
 
 
-/*
-To-Do
-- Make the graph class abstract?
-
-*/
-
 
 class Graph 
 {
