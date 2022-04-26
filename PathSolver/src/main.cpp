@@ -3,14 +3,8 @@
 #include <chrono>
 #include <thread>
 
-#include "node.h"
 #include "Graph.h"
-#include "bfs.h"
 #include "utility.h"
-
-//#include "djikstra.h"
-//#include "astar.h"
-//#include "greedybfs.h"
 
 int main()
 {
@@ -19,10 +13,11 @@ int main()
 
     //Setup the grid
     constexpr int dim{ 20 }; //Number of rows/columns
-    BFSGraph graph(dim); //Construct an empty graph
+    //BFSGraph graph(dim); //Construct an empty graph
     //DjikstraGraph graph(dim);
-    //AstarGraph graph(dim);
-    //GreedyBFS graph(dim);
+    //GreedyGraph graph(dim);
+    AstarGraph graph(dim);
+    
     graph.fill(w_size); //Fill the graph with nodes (cells)
 
     bool done = false; //Has a search been completed?
@@ -34,18 +29,17 @@ int main()
     {
         //If in step mode
         //TO-DO stepping should block everything else?
-        //if(stepping && !done)
-        //{
-        //    //int next = StepBFS(graph);
-        //    int next = StepDjikstra;
-        //    std::this_thread::sleep_for(std::chrono::milliseconds(20));
-        //    if (next == -1)
-        //    {
-        //        DrawPath(graph);
-        //        done = true;
-        //        stepping = false;
-        //    }
-        //}
+        if(stepping && !done)
+        {
+            int next = graph.step();
+            std::this_thread::sleep_for(std::chrono::milliseconds(20));
+            if (next == -1)
+            {
+                DrawPath(graph);
+                done = true;
+                stepping = false;
+            }
+        }
 
         //User can use left click to place walls
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !stepping) //User can use left click to place walls
@@ -151,10 +145,7 @@ int main()
                         //Run the search, depending on whether user is in full or step mode.
                         if (!toggle_step)
                         {
-                            CompleteBFS(graph);
-                            //CompleteDjikstra(graph);
-                            //astarfull(graph);
-                            //greedyfull(graph);
+                            graph.run();
                             DrawPath(graph);
 
                             done = true; //Flag that the search has been completed.

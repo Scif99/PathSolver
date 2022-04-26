@@ -18,45 +18,15 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Graph.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\astar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\bfs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\djikstra.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\greedybfs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\node.cpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\node.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\utility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\bfs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Graph.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\djikstra.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\astar.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\greedybfs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
