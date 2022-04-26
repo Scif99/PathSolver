@@ -8,21 +8,21 @@
 
 int main()
 {
-    constexpr int w_size{ 800 }; //Size of the window
+    constexpr auto w_size{ 800 }; //Size of the window
     sf::RenderWindow window(sf::VideoMode(w_size, w_size), "Path Solver", sf::Style::Titlebar | sf::Style::Close); //Construct window
 
-    //Setup the grid
-    constexpr int dim{ 20 }; //Number of rows/columns
-    //BFSGraph graph(dim); //Construct an empty graph
+    //Set up the grid
+    constexpr auto dim{ 20 }; //Number of rows/columns
+    BFSGraph graph(dim); //Construct an empty graph
     //DjikstraGraph graph(dim);
     //GreedyGraph graph(dim);
-    AstarGraph graph(dim);
-    
+    //AstarGraph graph(dim);
+
     graph.fill(w_size); //Fill the graph with nodes (cells)
 
-    bool done = false; //Has a search been completed?
-    bool toggle_step = false; //Flag to toggle between step/full mode
-    bool stepping = false; //Is the algo running in real time
+    auto done{ false }; //Has a search been completed?
+    auto toggle_step{ false }; //Are we in step mode?
+    auto stepping {false }; //Is the algo running in real time?
 
     //Game Loop
     while (window.isOpen())
@@ -32,10 +32,10 @@ int main()
         if(stepping && !done)
         {
             int next = graph.step();
-            std::this_thread::sleep_for(std::chrono::milliseconds(20));
+            std::this_thread::sleep_for(std::chrono::milliseconds(10)); //Pause
             if (next == -1)
             {
-                DrawPath(graph);
+                graph.drawPath();
                 done = true;
                 stepping = false;
             }
@@ -44,7 +44,8 @@ int main()
         //User can use left click to place walls
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && !stepping) //User can use left click to place walls
         {
-            if (done) //If user clicks after a search, automatically reset the board
+            //If user clicks after a search, automatically reset the board first
+            if (done)
             {
                 graph.reset();
                 done = false;
@@ -59,7 +60,8 @@ int main()
         //User can use left click to place Grass with weight 5 (note this makes no difference for BFS)
         if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && !stepping) 
         {
-            if (done) //If user clicks after a search, automatically reset the board
+            //If user clicks after a search, automatically reset the board first
+            if (done) 
             {
                 graph.reset();
                 done = false;
@@ -98,14 +100,15 @@ int main()
                     //User can press 1 to change the start location to mouse position
                     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) 
                     {
-                        if (done) //If user clicks after a search, automatically reset the board
+                        //If user clicks after a search, automatically reset the board
+                        if (done) 
                         {
                             graph.reset();
                             done = false;
                         }
                         if (mouse_in_bounds(window,w_size)) //Clamp...
                         {
-                            auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked node 
+                            auto [row_no, col_no] = getCoords(window, w_size, dim); 
                             graph.addStart(row_no * dim + col_no);
                             std::cout << "Placed start node at " << row_no * dim + col_no << '\n';
                         }
@@ -114,14 +117,15 @@ int main()
                     //User can press 2 to change the end location to mouse position
                     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) 
                     {
-                        if (done) //If user clicks after a search, automatically reset the board
+                        //If user clicks after a search, automatically reset the board
+                        if (done) 
                         {
                             graph.reset();
                             done = false;
                         }
                         if (mouse_in_bounds(window, w_size)) //Clamp...
                             {
-                                auto [row_no, col_no] = getCoords(window, w_size, dim); //Get indices of the clicked cell
+                                auto [row_no, col_no] = getCoords(window, w_size, dim); 
                                 graph.addEnd(row_no * dim + col_no);
                                 std::cout << "Placed end node at " << row_no * dim + col_no << '\n';
                             }
@@ -146,7 +150,7 @@ int main()
                         if (!toggle_step)
                         {
                             graph.run();
-                            DrawPath(graph);
+                            graph.drawPath();
 
                             done = true; //Flag that the search has been completed.
                         }
@@ -164,12 +168,6 @@ int main()
                         std::cout << "Switched to " << mode << " mode\n";
                     }
 
-                    ////User can manually exit by pressing escape
-                    //else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-                    //{
-                    //    window.close();
-                    //    break;
-                    //}
                     break;
                 }
 

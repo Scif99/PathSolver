@@ -1,5 +1,4 @@
-#ifndef UTILITY
-#define UTILITY
+#pragma once
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -25,6 +24,3 @@ std::pair<int, int> getCoords(const sf::Window& win, int win_size, int grid_dim)
 	int row_no = y / unit;
 	return { row_no,col_no };
 }
-
-#endif
-

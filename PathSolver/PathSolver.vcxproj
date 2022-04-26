@@ -147,7 +147,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\graph.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\node.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\node.h" />
