@@ -24,7 +24,7 @@ public:
 	Graph(int dim)
 		:dim_{ dim }, v_nodes_{ {} }, start_{std::nullopt}, end_{ std::nullopt }
 	{}
-	virtual ~Graph() = default;
+	virtual ~Graph() = default; //Destructor must be marked virtual
 	void fill(int w_size); //Fill an empty graph with nodes
 
 	int dim() const { return dim_; } //Dimensions of the graph.
@@ -83,7 +83,6 @@ private:
 struct BFSGraph : Graph
 {
 	BFSGraph(int dim) : Graph(dim) {}
-	virtual ~BFSGraph() = default;
 	int distance_to(int i) { return distance[i]; }
 	virtual void reset() override;
 	void run() override;

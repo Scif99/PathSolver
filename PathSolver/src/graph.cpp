@@ -13,7 +13,6 @@ void Graph::fill(int w_size)
 			v_nodes_.push_back(Node{ j * units, i * units, w_size , sz });//The Nodes are stored in row-major order ----->
 		}
 	}
-	std::cout << "Filled\n";
 }
 
 //Return a vector containing indices of a node's neighbours
