@@ -1,7 +1,7 @@
 # PathSolver
 
 Controls
-- 1: PLace start node
+- 1: Place start node
 - 2: Place end node
 - Left-Click: Place walls
 - Right-Click: Place grass (grass nodes have a cost of 5) 
