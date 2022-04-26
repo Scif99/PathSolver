@@ -12,8 +12,8 @@
 
 
 /*
-* The Graph clase is an abstract base class 
-* Any class which inherits must implement a run() and step () function.s
+To-Do
+- Make the graph class abstract?
 
 */
 
