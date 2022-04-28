@@ -1,5 +1,9 @@
 # PathSolver
 
+## Download
+https://github.com/Scif99/PathSolver/releases/tag/v1.0
+
+
 Controls
 - 1: Place start node
 - 2: Place end node
