@@ -1,5 +1,11 @@
 # PathSolver
 
+## Algorithms Supported
+- BFS (Breadth First Search
+- Djikstra (UCS)
+- Greedy BFS
+- A*
+- 
 [Download here](https://github.com/Scif99/PathSolver/releases/tag/v1.0 "Download")
 
 
