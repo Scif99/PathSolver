@@ -24,3 +24,7 @@ Algorithms
 - A: A*
 - G: Greedy BFS
 - D: Djikstra
+
+
+Potential Optimisations
+- Replace unordered_maps with arrays
