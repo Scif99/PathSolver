@@ -28,16 +28,19 @@ std::pair<int, int> getCoords(const sf::Window& win, int win_size, int grid_dim)
 void print_controls() 
 {
 	std::cout << "Controls\n\n";
+
+	std::cout << "1: Place start node\n";
 	std::cout << "2: Place end node\n";
 	std::cout << "Left-Click: Place walls\n";
 	std::cout << "Right-Click: Place grass(grass nodes have a cost of 5)\n";
 	std::cout << "SPACE : Runs the algorithm\n";
-
 	std::cout << "R : Resets the grid\n";
-	std::cout << "T : Switches between step / full mode\n";
+	std::cout << "T : Switches between step / full mode\n\n";
+
 	std::cout << "Algorithms\n\n";
+
+	std::cout << "B : BFS\n";
 	std::cout << "G : Greedy BFS\n";
-	std::cout << "G : Greedy BFS\n";
-	std::cout << "B : Switch to BFS\n";
+	std::cout << "A : A*\n";
 	std::cout << "D : Djikstra\n";
 }
