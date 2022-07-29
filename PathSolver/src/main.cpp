@@ -16,14 +16,15 @@ int main()
 {
     print_controls();
 
-    constexpr auto w_size{ 800 }; //Size of the window
+    //Set up the window
+    constexpr auto w_size{ 800 }; 
     sf::RenderWindow window(sf::VideoMode(w_size, w_size), "Path Solver", sf::Style::Titlebar | sf::Style::Close); //Construct window
 
     //Set up the grid
-    constexpr auto dim{ 20 }; //Number of rows/columns
-
-    std::unique_ptr<Graph> pgraph = std::make_unique<BFSGraph>(BFSGraph(dim));
+    constexpr auto dim{ 20 };
+    std::unique_ptr<Graph> pgraph = std::make_unique<BFSGraph>(dim);
     pgraph->fill(w_size); //Fill the graph with nodes (cells)
+
 
     auto done{ false }; //Has a search been completed?
     auto toggle_step{ false }; //Are we in step mode?
@@ -177,7 +178,7 @@ int main()
                         pgraph->reset();
                         done = false;
                         stepping = false;
-                        pgraph = std::move(std::make_unique<BFSGraph>(BFSGraph(dim)));
+                        pgraph = std::move(std::make_unique<BFSGraph>(dim));
                         pgraph->fill(w_size);
                         std::cout << "Switched to BFS Search\n";
 
@@ -189,7 +190,7 @@ int main()
                         pgraph->reset();
                         done = false;
                         stepping = false;
-                        pgraph = std::move(std::make_unique<DjikstraGraph>(DjikstraGraph(dim)));
+                        pgraph = std::move(std::make_unique<DjikstraGraph>(dim));
                         pgraph->fill(w_size);
                         std::cout << "Switched to Djikstra\n";
 
@@ -201,7 +202,7 @@ int main()
                         pgraph->reset();
                         done = false;
                         stepping = false;
-                        pgraph = std::move(std::make_unique<GreedyGraph>(GreedyGraph(dim)));
+                        pgraph = std::move(std::make_unique<GreedyGraph>(dim));
                         pgraph->fill(w_size);
                         std::cout << "Switched to Greedy Search\n";
                     
@@ -213,7 +214,7 @@ int main()
                         pgraph->reset();
                         done = false;
                         stepping = false;
-                        pgraph = std::move(std::make_unique<AstarGraph>(AstarGraph(dim)));
+                        pgraph = std::move(std::make_unique<AstarGraph>(dim));
                         pgraph->fill(w_size);
                         std::cout << "Switched to A*\n";
 

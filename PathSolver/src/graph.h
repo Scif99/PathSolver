@@ -15,8 +15,7 @@ class Graph
 {
 public:
 	Graph(int dim)
-		:dim_{ dim }, v_nodes_{ {} }, start_{std::nullopt}, end_{ std::nullopt }
-	{}
+		:dim_{ dim } {}
 	virtual ~Graph() = default; //Destructor must be marked virtual
 	void fill(int w_size); //Fill an empty graph with nodes
 
@@ -43,7 +42,7 @@ public:
 	virtual void reset(); //Reset graph to a blank one
 
 	//Ideally want this to be pure virtual...
-	virtual int step() { return -1; };
+	virtual int step(){ return -1; };
 	virtual void run() {};
 
 	void drawPath();
@@ -64,8 +63,8 @@ public:
 private:
 	int dim_;
 	std::vector<Node> v_nodes_;
-	std::optional<int> start_; //Using optionals rather than using -1 as null
-	std::optional<int> end_;
+	std::optional<int> start_{std::nullopt}; //Using optionals rather than using -1 as null
+	std::optional<int> end_{std::nullopt};
 };
 
 

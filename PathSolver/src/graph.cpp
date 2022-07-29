@@ -10,7 +10,7 @@ void Graph::fill(int w_size)
 	{
 		for (int j = 0; j < sz; ++j) //Column
 		{
-			v_nodes_.push_back(Node{ j * units, i * units, w_size , sz });//The Nodes are stored in row-major order ----->
+			v_nodes_.emplace_back(j * units, i * units, w_size , sz);
 		}
 	}
 }
@@ -84,10 +84,6 @@ void Graph::reset()
 	start_ = std::nullopt;
 	end_ = std::nullopt;
 }
-
-
-
-
 
 
 

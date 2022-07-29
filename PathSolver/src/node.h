@@ -10,7 +10,8 @@
 
 */
 
-class Node : sf::RectangleShape {
+class Node : sf::Drawable 
+{
 public:
 	enum class Type
 	{
