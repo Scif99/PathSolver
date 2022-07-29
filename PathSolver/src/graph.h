@@ -1,5 +1,4 @@
 #pragma once
-
 #include <unordered_map>
 #include <vector>
 #include <queue>
@@ -70,66 +69,7 @@ private:
 };
 
 
-/* -----------------
-	BFS
-	---------------------
-*/
-struct BFSGraph : Graph
-{
-	BFSGraph(int dim) : Graph(dim) {}
-	int distance_to(int i) { return distance[i]; }
-	virtual void reset() override;
-	void run() override;
-	int step() override;
-	std::unordered_map<int, int> distance; // For non-weighted
-	std::queue<int> frontier; //BFS uses a queue to process nodes
-};
 
-/* --------------------------------
-	Djikstra
-	--------------------------------
-*/
-struct DjikstraGraph : Graph
-{
-	DjikstraGraph(int dim) : Graph(dim) {}
-	int distance_to(int i) { return cost_so_far[i]; }
-	virtual void reset() override;
-	void run()override;
-	int step() override;
-	std::unordered_map<int, int> cost_so_far;
-	std::priority_queue < std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater <std::pair<int, int>>> PQ; //(cost_so_far, index)
-};
 
-/* ----------------------
-*	Greedy
-	--------------------------
-*/
-struct GreedyGraph : Graph
-{
-	GreedyGraph(int dim) : Graph(dim) {}
-	//int distance_to(int i) { return cost_so_far[i]; }
-	int heuristic(int a, int b) const { return std::abs((a % dim()) - (b % dim())) + (std::abs(a - b) / dim()); } //xdiff + ydiff
-	virtual void reset() override;
-	void run() override;
-	int step() override;
-	std::unordered_map<int, int> priority;
-	std::priority_queue < std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater <std::pair<int, int>>> PQ; //(cost_so_far, index)
-};
 
-/* -----------------------
-	A*
-   ------------------------
-*/
-struct AstarGraph : Graph
-{
-	AstarGraph(int dim) : Graph(dim) {}
-	int distance_to(int i) { return cost_so_far[i]; }
-	int heuristic(int a, int b) const { return std::abs((a % dim()) - (b % dim())) + (std::abs(a - b) / dim()); } //xdiff + ydiff
-	virtual void reset() override;
-	void run() override;
-	int step() override;
-	std::unordered_map<int, int> cost_so_far;
-	std::unordered_map<int, int> priority;
-	std::priority_queue < std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater <std::pair<int, int>>> PQ; //(cost_so_far, index)
-};
 

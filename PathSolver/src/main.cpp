@@ -4,8 +4,13 @@
 #include <memory>
 #include <utility>
 
-#include "graph.h"
 #include "utility.h"
+#include "graph.h"
+
+#include "bfs.h"
+#include "djikstra.h"
+#include "greedy.h"
+#include "a_star.h"
 
 int main()
 {
