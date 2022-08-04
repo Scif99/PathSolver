@@ -1,16 +1,15 @@
 #include "graph.h"
+constexpr unsigned short WIN_SIZE{ 800 };
 
-
-//Fill the graph up with nodes
-void Graph::fill(int w_size)
+Graph::Graph(int dim)
+	: dim_{dim}
 {
-	auto sz = dim_;
-	float units = w_size / sz; //How far along/down the Node's position will be
-	for (int i = 0; i < sz; ++i) //Row 
+	const int sz = WIN_SIZE / dim_;
+	for (int i = 0; i < 20; ++i ) //Row 
 	{
-		for (int j = 0; j < sz; ++j) //Column
+		for (int j = 0; j < 20; ++j) //Column
 		{
-			v_nodes_.emplace_back(j * units, i * units, w_size , sz);
+			v_nodes_.emplace_back(j*sz, i*sz, sz);
 		}
 	}
 }

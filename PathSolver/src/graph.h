@@ -10,14 +10,15 @@
 #include "node.h"
 
 
+//TODO
+//Make this class abstract
+
 
 class Graph 
 {
 public:
-	Graph(int dim)
-		:dim_{ dim } {}
+	Graph(int dim);
 	virtual ~Graph() = default; //Destructor must be marked virtual
-	void fill(int w_size); //Fill an empty graph with nodes
 
 	int dim() const { return dim_; } //Dimensions of the graph.
 	int size() const { return v_nodes_.size(); } //Total number of nodes in the graph.

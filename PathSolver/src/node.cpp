@@ -1,14 +1,16 @@
 #include "node.h"
+#include <unordered_map>
 
-Node::Node(float x, float y, int w_size, int dim)
-	:rect_{ sf::RectangleShape() }, type_{ Node::Type::empty_ }, seen_{ false }
+Node::Node(float x, float y, int sz)
+	:type_{ Node::Type::empty_ }, seen_{ false }
 {
 	rect_.setPosition(x, y);
-	rect_.setSize(sf::Vector2f((float)w_size / dim, (float)w_size / dim)); //Grid is 20x20?
+	rect_.setSize(sf::Vector2f(sz,sz)); //Grid is 20x20?
 	rect_.setFillColor(sf::Color::White); //set Nodes to white
 	rect_.setOutlineColor(sf::Color::Black);
 	rect_.setOutlineThickness(1);
 }
+
 
 void Node::setType(Node::Type t)
 {

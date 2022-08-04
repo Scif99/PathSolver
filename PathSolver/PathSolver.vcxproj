@@ -156,6 +156,7 @@
     <ClCompile Include="src\node.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\application.h" />
     <ClInclude Include="src\a_star.h" />
     <ClInclude Include="src\bfs.h" />
     <ClInclude Include="src\djikstra.h" />

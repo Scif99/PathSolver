@@ -1,14 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-/*
-- The Node class is essentially a wrapper around an sf::rectangleShape
-- A Node object only knows it's own state. It knows nothing about other nodes.
-- The only thing a Node knows about the graph is it's dimensions.
-
-- The seen_ and visited_ data members are purely for visual purposes. 
-
-*/
 
 class Node : sf::Drawable 
 {
@@ -23,8 +15,8 @@ public:
 		grass_,
 	};
 
-	Node(float x, float y, int w_size, int dim); //Constructor takes an x position, y position, the size of the window, and the dimensions of the grid
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override { target.draw(rect_, states); }; //The draw function is inherited from the sf::Drawable class
+	Node(float x, float y, int sz); //Constructor takes an x position, y position, the size of the window, and the dimensions of the grid
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default) const override { target.draw(rect_, states); }; 
 
 	bool isType(Type t) const { return type_ == t; }
 	void setType(Type t);
@@ -36,9 +28,9 @@ public:
 
 	void reset();
 private:
-	sf::RectangleShape rect_;
-	bool seen_; //Represents whether a node has been flagged for processing (i.e added to the priority queue)
 	Type type_;
+	bool seen_; //Represents whether a node has been flagged for processing (i.e added to the priority queue)
+	sf::RectangleShape rect_;
 };
 
 
