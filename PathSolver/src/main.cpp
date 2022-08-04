@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
-
-#include "utility.h"
 #include "application.h"
+
+void print_controls();
 
 int main()
 {

@@ -15,7 +15,7 @@ public:
 		grass_,
 	};
 
-	Node(float x, float y, int sz); //Constructor takes an x position, y position, the size of the window, and the dimensions of the grid
+	Node(float x, float y, int sz); //Constructor takes an x position, y position, and the size (x and y will both take this value)
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default) const override { target.draw(rect_, states); }; 
 
 	bool isType(Type t) const { return type_ == t; }

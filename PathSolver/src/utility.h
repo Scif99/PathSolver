@@ -1,5 +1,4 @@
 #pragma once
-
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
@@ -15,17 +14,15 @@ bool mouse_in_bounds(const sf::RenderWindow& win)
 //Returns the row and column number of the cell that the cursor is currently at
 std::pair<int, int> getCoords(const sf::RenderWindow& win, int grid_dim)
 {
+	auto [x, y] = sf::Mouse::getPosition(win);
 
-	auto x = sf::Mouse::getPosition(win).x;
-	auto y = sf::Mouse::getPosition(win).y;
 	int unit = win.getSize().x / grid_dim; //grid is dim cells wide
-
 	int col_no = x / unit;
 	int row_no = y / unit;
 	return { row_no,col_no };
 }
 
-void print_controls() 
+void print_controls()
 {
 	std::cout << "Controls\n\n";
 
