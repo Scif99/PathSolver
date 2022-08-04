@@ -4,7 +4,7 @@
 #include <iostream>
 
 //Checks whether the mouse position lies within the window
-bool mouse_in_bounds(const sf::Window& win)
+bool mouse_in_bounds(const sf::RenderWindow& win)
 {
 	return sf::Mouse::getPosition(win).x >= 0 &&
 		sf::Mouse::getPosition(win).y >= 0 &&
@@ -13,7 +13,7 @@ bool mouse_in_bounds(const sf::Window& win)
 }
 
 //Returns the row and column number of the cell that the cursor is currently at
-std::pair<int, int> getCoords(const sf::Window& win, int grid_dim)
+std::pair<int, int> getCoords(const sf::RenderWindow& win, int grid_dim)
 {
 
 	auto x = sf::Mouse::getPosition(win).x;
