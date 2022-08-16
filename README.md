@@ -28,3 +28,5 @@ Algorithms
 
 Potential Optimisations
 - Replace unordered_maps with arrays
+
+Fix get_neighbours function in graph.h
